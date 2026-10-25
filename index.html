@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="referrer" content="no-referrer">
+<title>turnling: Attributing Subagent Work in Coding-Agent Protocol Adapters</title>
+<meta name="description" content="When a subagent outlives the request that started it, a coding-agent protocol adapter can credit its edits to a later request. We state an origin-attribution invariant, check two ACP adapters with Turnstile, prove a limit and a sufficient condition, and evaluate two fixes.">
+<meta property="og:title" content="turnling: Attributing Subagent Work in Coding-Agent Protocol Adapters">
+<meta property="og:description" content="An edit made for request A appears in B’s report in 581 of 956 Codex schedules and 39 of 111 Claude schedules on the original ACP adapters.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='6' width='9' height='4' rx='1' fill='%23DCDBD4'/%3E%3Crect x='11' y='6' width='4' height='4' rx='1' fill='%23D03B3B'/%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: light;
+  --ink: #1c1c1a;
+  --ink-2: #45443f;
+  --muted: #67655f;
+  --border: #e3e1da;
+  --hair: #d3d1c9;
+  --surface: #ffffff;
+  --soft: #f6f5f1;
+  --mis: #D03B3B;
+  --miss: #EDA100;
+  --ok: #DCDBD4;
+  --mis-soft: #fbe9e9;
+  --miss-soft: #fcf0d4;
+  --radius: 10px;
+  --maxw: 960px;
+  --maxw-wide: 1140px;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 22px; }
+.container.wide { max-width: var(--maxw-wide); }
+a { color: var(--ink); text-decoration: underline; text-decoration-color: #b3b0a6; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-color: var(--ink); }
+:focus-visible { outline: 3px solid #1c1c1a; outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 1.9rem; margin: 0 0 0.6em; }
+h3 { font-size: 1.22rem; margin: 1.8em 0 0.5em; }
+p { margin: 0 0 1em; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--soft); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.28em; white-space: nowrap; }
+.math { font-family: Georgia, "Times New Roman", serif; font-style: italic; white-space: nowrap; }
+.math sub { font-style: normal; font-size: 0.72em; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 12px; top: -60px; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 10; text-decoration: none; }
+.skip:focus { top: 12px; }
+.muted { color: var(--muted); }
+
+/* ---------- hero ---------- */
+.hero { text-align: center; padding: 64px 0 16px; }
+.hero .title { font-size: clamp(1.7rem, 3.6vw, 2.7rem); margin: 0 auto 12px; max-width: 980px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.18; }
+.hero .title .name, .hero .title .nb { white-space: nowrap; }
+.hero .title { text-wrap: balance; }
+.hero .subtitle { font-size: 1.2rem; color: var(--ink-2); font-style: italic; margin: 0 0 26px; }
+.authors { font-size: 1.06rem; margin: 0 auto 4px; }
+.affils { font-size: 0.95rem; color: var(--muted); margin: 0 0 2px; }
+.status { font-size: 0.85rem; color: var(--muted); margin: 0 0 26px; }
+.hero-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 0; padding: 0; list-style: none; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 20px; border-radius: 999px;
+  background: #1f1f1d; color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.3;
+  text-decoration: none;
+}
+.btn:hover { background: #000; color: #fff; }
+.btn svg { width: 16px; height: 16px; flex: none; }
+
+/* ---------- teaser ---------- */
+.teaser { padding-top: 34px; }
+.teaser figure { margin: 0; }
+.fig1 { max-width: 780px; margin: 0 auto; }
+.fig1-frame { display: block; overflow: hidden; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); }
+.fig1-frame img { display: block; width: 100%; height: auto; }
+.fig1-zoom, .fig1-zoom[hidden] { display: none; }
+.figure-caption { font-size: 0.93rem; color: var(--muted); margin: 12px auto 0; max-width: 780px; line-height: 1.6; }
+.figure-caption b { color: var(--ink); }
+.tldr { background: var(--soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin: 30px 0 0; }
+.label { display: block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+.tile { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px 12px; background: var(--surface); }
+.tile .v { display: block; font-size: 1.7rem; font-weight: 650; line-height: 1.15; letter-spacing: -0.01em; }
+.tile .v small { font-size: 0.6em; font-weight: 500; color: var(--muted); }
+.tile .d { display: block; font-size: 0.86rem; color: var(--ink-2); line-height: 1.45; margin-top: 6px; }
+.tile .d .sw { margin-right: 6px; vertical-align: 0; }
+
+/* ---------- sections ---------- */
+main section { padding: 46px 0 8px; }
+main section + section { border-top: 1px solid var(--border); margin-top: 36px; }
+.kicker { display: block; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.lead { font-size: 1.06rem; color: var(--ink-2); }
+.terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 24px 0; }
+.terms div { border-top: 2px solid var(--ink); padding-top: 8px; }
+.terms dt { font-weight: 700; }
+.terms dd { margin: 2px 0 0; font-size: 0.94rem; color: var(--ink-2); line-height: 1.55; }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 20px 0 22px; }
+.cards.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; background: var(--soft); }
+.card h4 { margin: 0 0 6px; font-size: 1.04rem; }
+.card p { margin: 0; font-size: 0.95rem; color: var(--ink-2); line-height: 1.6; }
+.card ul { margin: 6px 0 0; padding-left: 1.1em; font-size: 0.95rem; color: var(--ink-2); line-height: 1.55; }
+.card li + li { margin-top: 6px; }
+.card .tag { display: inline-block; margin-top: 12px; font-size: 0.85rem; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 3px 12px; }
+.note { font-size: 0.92rem; color: var(--muted); }
+.theorem { border-left: 3px solid var(--ink); background: var(--soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 14px 20px; margin: 22px 0; }
+.theorem p { margin: 0; }
+
+/* ---------- pipeline ---------- */
+.pipe { display: grid; grid-template-columns: 1fr auto 1fr auto 2.6fr auto 1fr; align-items: stretch; gap: 8px; margin: 26px 0 8px; padding: 0; list-style: none; }
+.pipe .step { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; background: var(--soft); font-size: 0.88rem; line-height: 1.5; color: var(--ink-2); }
+.pipe .step b { display: block; color: var(--ink); font-size: 0.95rem; margin-bottom: 2px; }
+.pipe .arrow { align-self: center; color: var(--muted); font-size: 1.1rem; }
+.pipe > .step { align-self: center; }
+.pipe .loop { border: 1px dashed var(--hair); border-radius: 12px; padding: 8px; display: grid; grid-template-columns: 1fr auto 1fr auto 1.35fr; gap: 6px; align-items: stretch; }
+.pipe .loop .cap { grid-column: 1 / -1; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 0 4px; }
+.pipe .loop .step { background: var(--surface); }
+.pipe .loop .arrow { font-size: 1rem; }
+ul.facts { padding-left: 1.15em; margin: 10px 0 0; }
+ul.facts li { margin: 0 0 0.6em; }
+
+/* ---------- Fig. 3, interactive ---------- */
+.fig3 { margin: 26px 0 6px; position: relative; }
+.f3-summary.probe { position: absolute; visibility: hidden; left: 0; top: 0; pointer-events: none; }
+.f3-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-bottom: 18px; }
+.seg-toggle { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--hair); border-radius: 999px; padding: 3px; gap: 2px; background: var(--surface); }
+.seg-toggle button { font: inherit; font-size: 0.88rem; font-weight: 600; color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; line-height: 1.3; }
+.seg-toggle button:hover { background: var(--soft); }
+.seg-toggle button[aria-pressed="true"] { background: #1f1f1d; color: #fff; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0; padding: 0; list-style: none; font-size: 0.88rem; color: var(--ink-2); }
+.legend li { display: inline-flex; align-items: center; gap: 7px; }
+.sw { display: inline-block; width: 16px; height: 10px; border-radius: 2px; background: var(--ok); flex: none; }
+.sw.k-mis { background: var(--mis); }
+.sw.k-miss { background: var(--miss); }
+.sw.k-ok { background: var(--ok); }
+.sw.k-na { background: transparent; border: 1px dashed var(--hair); }
+.f3-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 26px 30px; }
+.f3-panel { min-width: 0; }
+.f3-title { font-size: 0.95rem; margin: 0 0 6px; line-height: 1.4; }
+.f3-total { display: block; color: var(--muted); font-size: 0.86rem; }
+.f3-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 38px; align-items: center; gap: 8px; }
+.f3-row .f3-seg { transition: opacity 0.15s ease; }
+.f3-row.dim .f3-seg { opacity: 0.3; }
+.f3-row.dim .f3-rl, .f3-row.dim .f3-cnt { color: var(--muted); }
+.f3-rl { font-size: 0.84rem; text-align: right; color: var(--ink); line-height: 1.2; }
+.f3-cnt { font-size: 0.9rem; text-align: right; font-variant-numeric: tabular-nums; }
+.f3-track { display: flex; gap: 2px; min-width: 0; }
+.f3-labels { align-items: flex-end; }
+.f3-clab { min-width: 0; text-align: center; font-size: 0.76rem; color: var(--muted); line-height: 1.25; padding-bottom: 4px; display: flex; flex-direction: column; align-items: center; }
+.f3-clab .f3-cname { display: block; white-space: nowrap; }
+.f3-clab .f3-cn { display: block; margin-top: 2px; }
+.f3-clab .f3-cn { font-variant-numeric: tabular-nums; }
+.f3-clab.on { color: var(--ink); font-weight: 650; }
+.f3-seg { flex-basis: 0; min-width: 0; height: 30px; padding: 5px 0; margin: 0; border: 0; background: transparent; cursor: pointer; display: block; }
+.f3-fill { display: block; height: 100%; border-radius: 2px; background: var(--ok); transition: filter 0.1s ease; }
+.f3-seg.k-mis .f3-fill { background: var(--mis); }
+.f3-seg.k-miss .f3-fill { background: var(--miss); }
+.f3-seg:hover .f3-fill { filter: brightness(0.9); }
+.f3-seg.on .f3-fill { box-shadow: inset 0 0 0 2px var(--ink); }
+.f3-seg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.f3-na .f3-track { min-height: 30px; align-items: center; }
+.f3-natext { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+.f3-na .f3-cnt { color: var(--muted); font-size: 0.8rem; }
+.f3-summary { font-size: 0.9rem; color: var(--ink-2); margin: 0; flex: 1 1 280px; }
+.f3-detail { position: relative; margin-top: 22px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); padding: 14px 18px; }
+.f3-detail.probe { position: absolute; visibility: hidden; left: 0; top: 0; pointer-events: none; margin: 0; }
+.f3-hint { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.f3-dhead { margin: 0 0 6px; font-size: 0.9rem; color: var(--ink-2); }
+.f3-dgrid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 4px 28px; }
+.f3-dval { margin: 0; font-size: 0.95rem; color: var(--ink-2); }
+.f3-dval strong { font-size: 1.5rem; color: var(--ink); font-weight: 650; margin-right: 4px; }
+.f3-ddesc { margin: 4px 0 0; font-size: 0.92rem; color: var(--ink-2); line-height: 1.55; }
+.f3-dbuilds { list-style: none; margin: 0; padding: 0; font-size: 0.9rem; }
+.f3-dbuilds li { display: flex; align-items: baseline; gap: 8px; line-height: 1.5; }
+.f3-dbuilds .sw { transform: translateY(1px); }
+.f3-bn { font-weight: 600; }
+.f3-wrap { position: relative; }
+details.paperfig { margin: 16px 0 0; }
+details.paperfig summary { cursor: pointer; color: var(--ink-2); font-size: 0.92rem; font-weight: 600; width: fit-content; }
+details.paperfig img { display: block; width: 100%; height: auto; margin-top: 12px; border: 1px solid var(--border); border-radius: 8px; }
+details.paperfig .figure-caption { margin: 8px 0 0; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; margin: 14px 0 4px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.tbl { font-size: 0.9rem; }
+.tbl th, .tbl td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: right; vertical-align: top; line-height: 1.4; }
+.tbl thead th { font-weight: 650; color: var(--ink-2); border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+.tbl thead tr.top th { border-bottom: 0; }
+.tbl thead tr.top th.grp { border-bottom: 1px solid var(--hair); text-align: center; }
+.tbl th.l, .tbl td.l, .tbl tbody th { text-align: left; }
+.tbl tbody th { font-weight: 400; }
+.tbl tbody tr.sub th { font-style: italic; font-weight: 600; color: var(--ink-2); padding-top: 12px; border-bottom: 1px solid var(--hair); }
+.tbl tbody tr:last-child th, .tbl tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
+.tbl td.m { background: var(--mis-soft); }
+.tbl td.o { background: var(--miss-soft); }
+.tbl td.oi { background: repeating-linear-gradient(135deg, #f7e3b3 0 1.5px, #fffdf8 1.5px 6px); }
+.sw.k-oi { background: repeating-linear-gradient(135deg, #e9c46a 0 1.5px, #fffdf8 1.5px 5px); border: 1px solid #ead8ad; }
+.sw.k-o { background: var(--miss-soft); border: 1px solid #ecd59c; }
+.sw.k-m { background: var(--mis-soft); border: 1px solid #efc4c4; }
+.tbl td.na { color: var(--muted); }
+.tbl sup { font-size: 0.7em; line-height: 0; }
+.tbl-caption { font-size: 0.93rem; color: var(--muted); margin: 26px 0 0; }
+.tbl-caption b { color: var(--ink); }
+.t1.collapsed tr.extra { display: none; }
+.more { font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--hair); border-radius: 999px; padding: 6px 16px; cursor: pointer; margin: 10px 0 0; }
+.more:hover { background: var(--soft); }
+.footnotes { font-size: 0.86rem; color: var(--muted); margin: 12px 0 1.2em; line-height: 1.6; }
+.footnotes sup { font-size: 0.75em; }
+.t1 th.l { min-width: 9.5em; }
+
+/* status chips (live runs) */
+.chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.chip::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--ok); flex: none; }
+.chip.k-mis { font-weight: 650; }
+.chip.k-mis::before { background: var(--mis); }
+.chip.k-none::before { background: transparent; border: 1px solid var(--muted); }
+.live td, .live th { text-align: left; }
+.live td.files { font-family: var(--mono); font-size: 0.82rem; }
+.live td.files b { font-weight: 700; }
+.live td.files .none { font-family: var(--sans); font-style: italic; color: var(--muted); }
+.live tbody tr.sub th { font-style: normal; }
+.live .sub .muted { font-weight: 400; }
+dl.scen { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; font-size: 0.93rem; margin: 18px 0; }
+dl.scen dt { font-weight: 650; }
+dl.scen dd { margin: 0; color: var(--ink-2); }
+
+/* ---------- witness ---------- */
+.witness { border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px 20px; margin: 22px 0 10px; box-shadow: 0 1px 3px rgba(20, 20, 18, 0.05), 0 8px 24px rgba(20, 20, 18, 0.04); }
+.w-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-bottom: 12px; }
+.w-top p { margin: 0; font-size: 0.92rem; color: var(--ink-2); flex: 1 1 300px; }
+.w-toggle button { min-width: 3.4em; font-size: 0.95rem; }
+.w-toggle .math { font-size: 1.05em; }
+.wt { font-size: 0.93rem; }
+.wt th, .wt td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; line-height: 1.4; }
+.wt thead th { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+.wt .n { color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 0; }
+.wt .hidcol { background: #faf9f6; border-left: 1px solid var(--border); }
+.wt thead .hidcol { background: transparent; }
+.hidbox { display: inline-block; background: #ECEBE6; border-radius: 6px; padding: 2px 10px; }
+.witness[data-exec="E"] .vep, .witness[data-exec="Ep"] .ve { display: none; }
+.wt { table-layout: fixed; }
+.wt col.c-n { width: 2.2em; }
+.wt col.c-hid { width: 34%; }
+.hidbox.owner { font-weight: 700; min-width: 2.4em; text-align: center; }
+.hidbox .tool { display: block; font-family: var(--mono); font-size: 0.76rem; color: var(--muted); }
+.wt tfoot th, .wt tfoot td { border-bottom: 0; border-top: 1px solid var(--ink); font-weight: 650; }
+.flip { animation: flip 0.32s ease; }
+@keyframes flip { 0% { transform: rotateX(90deg); opacity: 0.2; } 100% { transform: rotateX(0); opacity: 1; } }
+.w-outs { display: grid; margin-top: 14px; }
+.w-out { grid-area: 1 / 1; visibility: hidden; border-radius: var(--radius); padding: 12px 16px; font-size: 0.93rem; line-height: 1.6; }
+.w-out p { margin: 0; }
+.w-out p + p { margin-top: 6px; }
+.w-out.e { background: var(--mis-soft); }
+.w-out.ep { background: var(--miss-soft); }
+.witness[data-exec="E"] .w-out.e, .witness[data-exec="Ep"] .w-out.ep { visibility: visible; }
+.w-same { margin: 12px 0 0; font-size: 0.9rem; color: var(--ink-2); }
+
+/* ---------- explainer ---------- */
+.frame-wrap { margin: 20px 0 0; }
+/* The explainer needs about 900 px of height at these widths; the frame is that tall, so it never
+   scrolls inside. Below 981 px wide (and without JavaScript) the page shows a poster that opens it. */
+.frame-wrap iframe { display: none; width: 100%; height: 904px; border: 1px solid var(--border); border-radius: 14px; background: #f6f5f2; color-scheme: light; }
+.frame-wrap.live iframe { display: block; }
+.frame-wrap.live .poster { display: none; }
+.frame-wrap:not(.live) + .frame-links { display: none; }
+.frame-links { margin: 10px 0 0; font-size: 0.93rem; }
+.poster { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: center; gap: 18px 28px; border: 1px solid var(--border); border-radius: 14px; background: #f6f5f2; padding: 22px 24px; color: var(--ink); text-decoration: none; }
+.poster > svg { display: block; width: 100%; height: auto; }
+.poster .p-eyebrow { display: block; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.poster .p-title { display: block; font-size: 1.15rem; font-weight: 650; line-height: 1.3; margin-bottom: 6px; }
+.poster .p-text { display: block; font-size: 0.93rem; color: var(--ink-2); line-height: 1.55; margin-bottom: 14px; }
+.poster .btn { width: fit-content; }
+.poster:hover .btn { background: #000; }
+
+/* ---------- limitations ---------- */
+.limits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 20px 0 0; }
+
+/* ---------- citation ---------- */
+.bib { margin: 18px 0 0; border-radius: var(--radius); overflow: hidden; background: #22231f; }
+.bib-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 10px 8px 18px; border-bottom: 1px solid #3a3b35; color: #b9b8ae; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.copy { font: inherit; font-size: 0.82rem; letter-spacing: 0; text-transform: none; color: #fff; background: rgba(255, 255, 255, 0.12); border: 0; border-radius: 6px; padding: 6px 14px; cursor: pointer; }
+.copy:hover { background: rgba(255, 255, 255, 0.22); }
+.copy:focus-visible { outline-color: #fff; }
+pre.bibtex { margin: 0; padding: 16px 18px 18px; color: #e3e2da; font-family: var(--mono); font-size: 0.84rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 28px 0 44px; font-size: 0.86rem; color: var(--muted); text-align: center; }
+footer p { margin: 0 0 4px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 980px) {
+  .pipe { grid-template-columns: 1fr; }
+  .pipe .arrow { justify-self: center; transform: rotate(90deg); line-height: 1; }
+  .pipe .loop { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards, .cards.two, .limits, .terms { grid-template-columns: 1fr; }
+  .f3-dgrid { grid-template-columns: 1fr; }
+  .f3-dbuilds { margin-top: 8px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .container { padding: 0 16px; }
+  .hero { padding-top: 40px; }
+  .hero .title .name { white-space: normal; }
+  h2 { font-size: 1.5rem; }
+  main section { padding-top: 36px; }
+  .tldr { padding: 16px 16px; }
+  .tile { padding: 12px 12px 10px; }
+  .tile .v { font-size: 1.4rem; }
+  .card { padding: 16px; }
+  .witness { padding: 14px 12px 16px; }
+  .wt { font-size: 0.86rem; }
+  .wt th, .wt td { padding: 6px 5px; }
+  .wt col.c-hid { width: 40%; }
+  .wt col.c-n { width: 1.6em; }
+  .hidbox { padding: 2px 6px; }
+  .tbl { font-size: 0.8rem; }
+  .tbl th, .tbl td { padding: 6px 4px; }
+  .t1 th.l { min-width: 0; }
+  dl.scen { grid-template-columns: 1fr; gap: 2px; }
+  dl.scen dd { margin-bottom: 8px; }
+  /* live runs: one compact block per run */
+  .live thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .live, .live tbody { display: block; width: 100%; }
+  .live tbody tr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 6px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .live tbody tr.sub { display: block; padding: 14px 0 4px; border-bottom: 1px solid var(--hair); }
+  .live tbody tr.sub th { display: block; border: 0; padding: 0; }
+  .live td { display: block; border: 0; padding: 0; }
+  .live td:nth-child(1) { grid-column: 1; grid-row: 1; font-weight: 600; }
+  .live td:nth-child(2) { grid-column: 2; grid-row: 1; color: var(--ink-2); }
+  .live td:nth-child(2)::before { content: "\00b7\00a0"; }
+  .live td:nth-child(5) { grid-column: 3; grid-row: 1; }
+  .live td:nth-child(3) { grid-column: 1 / -1; grid-row: 2; }
+  .live td:nth-child(4) { grid-column: 1 / -1; grid-row: 3; }
+  .live td.files::before { content: attr(data-label) ": "; font-family: var(--sans); font-size: 0.8rem; color: var(--muted); }
+  .live tbody tr:last-child td { border: 0; }
+  .seg-toggle { display: grid; grid-template-columns: 1fr 1fr; border-radius: 16px; width: 100%; }
+  .seg-toggle button { border-radius: 12px; }
+  .w-toggle { display: inline-grid; width: auto; }
+  .tbl.t1 { font-size: 0.74rem; }
+  .t1 th, .t1 td { padding: 6px 3px; }
+  .t1 thead tr.top th.grp { white-space: normal; }
+  .f3-row { grid-template-columns: 92px minmax(0, 1fr) 34px; gap: 6px; }
+  .poster { grid-template-columns: 1fr; padding: 18px 16px; }
+  .poster > svg { max-width: 340px; }
+  /* Fig. 1 on phones: an optional enlarged view that scrolls sideways */
+  .fig1-scroll { overflow-x: auto; border-radius: var(--radius); }
+  .fig1.zoomed .fig1-frame { width: 600px; }
+  .fig1-zoom:not([hidden]) { display: inline-flex; }
+  .fig1-zoom { align-items: center; gap: 6px; font: inherit; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: var(--surface); border: 1px solid var(--hair); border-radius: 999px; padding: 4px 14px; margin: 10px 0 0; cursor: pointer; }
+  .fig1-zoom svg { width: 14px; height: 14px; }
+}
+@media (max-width: 400px) {
+  /* Table I: use the page margins so its eight columns fit without scrolling */
+  .t1-wrap { margin-left: -12px; margin-right: -12px; }
+}
+@media (max-width: 359px) {
+  .f3-clab .f3-cname { white-space: normal; }
+  .f3-row { grid-template-columns: 84px minmax(0, 1fr) 30px; gap: 5px; }
+  .f3-rl { font-size: 0.8rem; }
+  .tbl.t1 { font-size: 0.7rem; }
+  .t1 th, .t1 td { padding: 5px 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+.btn.btn-off { background: #fff; color: var(--muted, #6b6a64); border: 1px dashed #c9c7bf; cursor: default; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hero container wide">
+  <h1 class="title"><span class="name">turnling</span>: Attributing Subagent Work in <span class="nb">Coding-Agent</span> Protocol Adapters</h1>
+  <p class="subtitle">Subagent work belongs to the turn that spawned it</p>
+  <p class="authors"><a href="https://qxlsz.com">Rajasekhar Josyula</a> &nbsp;&middot;&nbsp; Lakshmi Sravya Vedantham</p>
+  <p class="affils">Independent Researchers</p>
+  <p class="status">Manuscript, 2026</p>
+  <ul class="hero-links">
+    <li><a class="btn" href="paper.pdf"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z M9.5 1.5v3h3 M5.5 8h5 M5.5 10.5h5 M5.5 13h3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Paper (PDF)</a></li>
+    <li><span class="btn btn-off" title="The code repository is private until the paper is reviewed"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4 1.5 8l4 4 M10.5 4l4 4-4 4 M9.2 2.5 6.8 13.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Code coming soon</span></li>
+    <li><a class="btn" href="explainer.html"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 5.5v5l4-2.5z" fill="currentColor"/></svg>Explainer</a></li>
+    <li><a class="btn" href="#citation"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H4.6c0-1.3.4-1.8 1.4-2z M11.4 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H11c0-1.3.4-1.8 1.4-2z" fill="currentColor"/></svg>BibTeX</a></li>
+  </ul>
+</header>
+
+<div class="teaser container wide">
+  <figure>
+    <div class="fig1" id="fig1">
+      <div class="fig1-scroll"><div class="fig1-frame">
+        <img src="assets/fig1.png" width="1277" height="588" alt="Sequence diagram with four lifelines: client, adapter, root thread, and child c. The client sends prompt A; the root thread reports A started and spawns c; the client cancels A; A is interrupted and A's report is unavailable; the client sends prompt B; then c's start (step 7) and c's edit of a.txt (step 8) reach the adapter; B edits b.txt; and the adapter publishes B's report as b.txt and a.txt.">
+      </div></div>
+      <button type="button" class="fig1-zoom" id="fig1-zoom" aria-controls="fig1" aria-pressed="false" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.4 10.4 14 14 M5 7h4 M7 5v4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Enlarge figure</span></button>
+    </div>
+    <figcaption class="figure-caption">
+      <b>Arrival is not origin.</b> Request A spawns a child subagent <span class="math">c</span>, and the client then cancels A. The child keeps running, and its edit of <code>a.txt</code> reaches the adapter after the client has sent request B. The original adapter credits the edit to the request current at step 8, so B’s file-change report lists <code>a.txt</code>. The start-time patch binds <span class="math">c</span> to B at step 7, which is still wrong; the dispatch-time patch binds <span class="math">c</span> to A through the spawn item (step 2). (Fig. 1 of the paper: minimal failing cancel schedule, abridged, no preemption.)
+    </figcaption>
+  </figure>
+</div>
+
+<div class="container">
+  <div class="tldr">
+    <span class="label">In short</span>
+    Editors reach coding agents through Agent Client Protocol (ACP) adapters, some of which also tell the editor which files each request changed. When a subagent outlives the request that started it, its late edits can be credited to whichever request is current when they arrive. We state the property such reports should keep, an <b>origin-attribution invariant</b>, and check it with <b>Turnstile</b>, which runs an unmodified adapter against a scripted provider under the event orders a provider model allows in hand-written scenarios, exhaustively or, for four large ones, within a preemption bound. We also prove that on the typed Codex 0.160.1 wire no adapter meeting stated conditions attributes exactly in all legal executions, and that origin links on the event stream suffice.
+    <ul class="tiles">
+      <li class="tile"><span class="v">581 <small>of 956</small></span><span class="d"><span class="sw k-mis" aria-hidden="true"></span>Codex schedules in which B’s report lists an edit made for A (original adapter)</span></li>
+      <li class="tile"><span class="v">39 <small>of 111</small></span><span class="d"><span class="sw k-mis" aria-hidden="true"></span>Claude schedules with the same failure (original adapter)</span></li>
+      <li class="tile"><span class="v">0</span><span class="d"><span class="sw k-ok" aria-hidden="true"></span>misattributing Codex schedules with dispatch-time binding, in every scenario of Table I</span></li>
+      <li class="tile"><span class="v">16</span><span class="d">single live runs against the real Codex 0.160.1 and 0.162.0 and Claude Code 2.1.309 CLIs</span></li>
+    </ul>
+  </div>
+</div>
+
+<main id="main">
+
+<section id="problem">
+  <div class="container">
+    <span class="kicker">The problem</span>
+    <h2>Arrival is not origin</h2>
+    <p class="lead">The Agent Client Protocol (ACP) is a JSON-RPC protocol, usually over stdio, between a client such as an IDE and a coding agent. Adapters wrap vendor runtimes, which we call <em>providers</em>, such as Codex and Claude Code. Some adapters also derive per-request outputs: for JetBrains AIR, the Codex and Claude adapters return an <em>agent file-change report</em> that lists the paths a request changed, before answering that request.</p>
+    <p>Agents now delegate to subagents, and some providers let a subagent outlive the turn that started it. Both adapters we study keep per-request bookkeeping, created for each request and disposed when it returns, so a late event from an older subagent can arrive after the state that recorded its origin is gone. Credited to the request active on arrival, it puts one request’s changes in another’s report, and the client cannot tell: the report has the right request id and the wrong contents. The AIR documentation does not say who owns paths changed by children.</p>
+    <dl class="terms">
+      <div><dt>Request</dt><dd>One <code>session/prompt</code> call: A, B, and so on.</dd></div>
+      <div><dt>Turn</dt><dd>Provider-side work: one root turn per request, plus child turns run by subagents (children).</dd></div>
+      <div><dt>Origin</dt><dd>The request whose processing dispatched a turn, inherited by nested children.</dd></div>
+    </dl>
+
+    <h3>The origin-attribution invariant</h3>
+    <p>Informally, a report for request <span class="math">r</span> should list only paths of work whose origin is <span class="math">r</span>, and all of them seen so far, or say that it may be incomplete. A late write by A’s child may be legitimate; listing it as B’s is not. We call violations <em>turn-attribution bugs</em>. The usual one, <em>arrival-time attribution</em>, takes the request active now as the origin.</p>
+    <div class="cards">
+      <div class="card"><h4>Sound</h4><p>Every path in the report has an edit, received before the report, from some turn whose origin is the report’s request.</p></div>
+      <div class="card"><h4>Complete</h4><p>Every path edited by a turn of that origin, with the edit received before the report, is in it.</p></div>
+      <div class="card"><h4>Safe</h4><p>Sound, and the completeness flag (<code>declaredComplete</code>) is set only if the report is also complete. Reporting nothing, with the flag clear, is always safe.</p></div>
+    </div>
+    <p class="note">An adapter is <em>exact</em> if, in all legal executions, its available reports are sound and complete. Both adapters always clear <code>declaredComplete</code>, so for them safety is soundness. The invariant is our proposal, not part of the AIR contract.</p>
+  </div>
+</section>
+
+<section id="turnstile">
+  <div class="container">
+    <span class="kicker">Method</span>
+    <h2>Turnstile: exploring protocol-legal schedules</h2>
+    <p class="lead">Upstream file-report tests never send a second request while a subagent of the first still runs, and a hand-picked failing order invites the objection that providers never produce it. Turnstile therefore enumerates the orders a provider model allows and runs the unmodified adapter under each schedule it explores. It is an LLM-free checker in the style of systematic concurrency testing (CHESS).</p>
+  </div>
+  <div class="container wide">
+    <ol class="pipe" aria-label="How Turnstile checks one adapter">
+      <li class="step"><b>Scenario</b>Provider events and client actions on FIFO streams, with happens-before edges and triggers.</li>
+      <li class="arrow" aria-hidden="true">&rarr;</li>
+      <li class="step"><b>Explorer</b>Enumerates schedules: total orders of the scenario’s 10 to 24 items that respect the constraints.</li>
+      <li class="arrow" aria-hidden="true">&rarr;</li>
+      <li class="loop">
+        <span class="cap">Per schedule, in a fresh adapter process</span>
+        <span class="step"><b>ACP client</b>Sends prompts and cancels; captures reports.</span>
+        <span class="arrow" aria-hidden="true">&harr;</span>
+        <span class="step"><b>Adapter</b>Unmodified build of the pinned commit.</span>
+        <span class="arrow" aria-hidden="true">&harr;</span>
+        <span class="step"><b>Provider stub</b>Reached through a relay at the provider path; speaks Codex app-server JSON-RPC or Claude CLI stream-json.</span>
+      </li>
+      <li class="arrow" aria-hidden="true">&rarr;</li>
+      <li class="step"><b>Oracle</b>Checks each report against a ledger of true origins, hidden from the adapter.</li>
+    </ol>
+  </div>
+  <div class="container">
+    <h3>What counts as legal</h3>
+    <p>For Codex, the rules combine guarantees confirmed in the pinned provider’s source with restrictions that only remove legal orders, so they can hide failures but cannot create illegal orders. The guarantees: events within a thread are FIFO; <code>turn/interrupt</code> reaches only the root thread, so children keep emitting after it; nothing orders events across threads; and a parent waits for children only through a wait tool. For Claude we could not check provider source, so the stub encodes the adapter’s own assumptions (background-subagent frames share the CLI’s single ordered stream, are tagged with their launching tool call, and may interleave with later root turns), each seen in live Claude runs.</p>
+    <h3>How a verdict is reached</h3>
+    <ul class="facts">
+      <li>The explorer delivers one item at a time and waits until neither side has sent a message for 150&nbsp;ms, a heuristic for quiescence. It explores message orders, not races inside the adapter.</li>
+      <li>The oracle reports a <b>misattribution</b> when a report lists a path whose origin is another request, and <b>missing expected output</b> when a report omits a required own path whose evidence arrived before it. It also flags missing, unexpected, early, or late reports, false completeness claims, and adapter exits.</li>
+      <li>A schedule that hangs, errors, or diverges on re-run is inconclusive, never clean. Violating schedules are re-run three times and count only if they fail identically. Four deliberately broken builds (no B report, dropped child paths, an early report, a crash) were each flagged on every affected schedule.</li>
+      <li>Fixes must not win by discarding work, so each adapter has controls in which late child output is legitimately B’s (B starts a new child, gives A’s child new work, or resumes it) or must stay out of B’s report. A correct adapter passes every control in every schedule.</li>
+      <li>Where a scenario has too many orders, exploration is bounded by preemptions, as in CHESS. A preemption is a switch away from a provider stream that still has a deliverable item; it measures distance from the default order, not likelihood.</li>
+      <li>The stubs call no LLM. On one desktop, each build’s main Codex runs took under an hour.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="results">
+  <div class="container">
+    <span class="kicker">Results</span>
+    <h2>Both adapters credit some late child edits to the wrong request</h2>
+    <p class="lead">We pinned codex-acp at commit <code>082be156</code> and claude-agent-acp at <code>ecaa2c93</code>; the Codex stub follows rust-v0.160.1 (<code>d27764b8</code>), the version codex-acp pins. The numbers come from one final run of every build, with no divergent or inconclusive schedule and no flaky one except as noted under Table I. In the three groups of Fig. 3, an outcome depends only on when the child’s evidence arrives relative to B.</p>
+  </div>
+
+  <div class="container wide">
+    <div class="fig3" id="fig3">
+      <div class="f3-controls">
+        <div class="seg-toggle" role="group" aria-label="Highlight one build">
+          <button type="button" data-build="all" aria-pressed="true">All builds</button>
+          <button type="button" data-build="Original" aria-pressed="false">Original</button>
+          <button type="button" data-build="Start-time" aria-pressed="false">Start-time</button>
+          <button type="button" data-build="Dispatch-time" aria-pressed="false">Dispatch-time</button>
+        </div>
+        <ul class="legend" aria-label="Legend">
+          <li><span class="sw k-mis" aria-hidden="true"></span>misattribution</li>
+          <li><span class="sw k-miss" aria-hidden="true"></span>missing output</li>
+          <li><span class="sw k-ok" aria-hidden="true"></span>clean</li>
+        </ul>
+      </div>
+      <p class="f3-summary" id="f3-summary" aria-live="polite"></p>
+      <div class="f3-wrap">
+        <div class="f3-panels" id="f3-panels" style="margin-top:14px"></div>
+        <div class="f3-detail" id="f3-detail" aria-live="polite"></div>
+      </div>
+      <noscript><img src="assets/fig3.png" alt="Fig. 3 of the paper: outcome strips per build for three scenario groups." style="width:100%;height:auto"></noscript>
+    </div>
+    <p class="figure-caption" style="max-width:none;margin:16px 0 0">
+      <b>Fig. 3, interactive.</b> Every schedule of three scenario groups, split to scale by when the child’s evidence reaches the adapter; one strip per build, violating schedules counted at right. <em>In B</em>: after B’s prompt (Codex) or its echo by the CLI (Claude), before B’s report. <em>Early</em> or <em>late start</em>: in B, and the child started before or after B’s prompt. <em>Notice before</em> or <em>after</em>: Codex’s completion notice for the child’s new turn came before or after B’s report. Each class is all violating or all clean in every build.
+    </p>
+    <details class="paperfig">
+      <summary>Show the paper figure (Fig. 3)</summary>
+      <img src="assets/fig3.png" width="2610" height="284" loading="lazy" alt="Fig. 3 of the paper: for Codex with A cancelled or interrupted (812 schedules), the original build fails in 581 and the start-time build in 174, the dispatch-time build in none; for the Claude hand-off (111), the original fails in 39 and the patch in none; for the Codex control without a dispatch item (84), only the dispatch-time build fails, in 40, with missing output.">
+    </details>
+  </div>
+
+  <div class="container">
+    <p class="tbl-caption"><b>Table I.</b> Turnstile results per build: schedules explored (exhaustive except row c) and schedules in which a report lists another request’s edit or omits an own edit that arrived before it.</p>
+    <div class="table-wrap t1-wrap">
+      <table class="tbl t1" id="t1">
+        <caption class="sr-only">Table I. Turnstile results per build</caption>
+        <thead>
+          <tr class="top"><th class="l" rowspan="2" scope="col">Scenario</th><th rowspan="2" scope="col">Sched.</th><th class="grp" colspan="3" scope="colgroup">Misattributing</th><th class="grp" colspan="3" scope="colgroup">Omitting own edit</th></tr>
+          <tr><th scope="col">Orig.</th><th scope="col">Start</th><th scope="col">Disp.</th><th scope="col">Orig.</th><th scope="col">Start</th><th scope="col">Disp.</th></tr>
+        </thead>
+        <tbody>
+          <tr class="sub"><th colspan="8" scope="rowgroup">Codex</th></tr>
+          <tr><th scope="row">A cancelled by client</th><td>504</td><td class="m">341</td><td class="m">87</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><th scope="row">A interrupted<sup>a</sup></th><td>308</td><td class="m">240</td><td class="m">87</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr class="extra"><th scope="row">A completed</th><td>144</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><th scope="row">sibling or grandchild<sup>c</sup></th><td>996</td><td class="m">620</td><td class="m">620</td><td>0</td><td>0</td><td>0</td><td class="oi">226</td></tr>
+          <tr><th scope="row">6 controls</th><td>401</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="o">40<sup>b</sup></td></tr>
+          <tr><th scope="row">Theorem 1 pair, <span class="math">E</span></th><td>952</td><td class="m">792</td><td class="m">792</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><th scope="row">Theorem 1 pair, <span class="math">E&prime;</span></th><td>952</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="o">792<sup>b</sup></td></tr>
+          <tr class="sub"><th colspan="8" scope="rowgroup">Claude</th></tr>
+          <tr><th scope="row">background child hand-off</th><td>111</td><td class="m">39</td><td>0</td><td class="na">n/a</td><td>0</td><td>0</td><td class="na">n/a</td></tr>
+          <tr class="extra"><th scope="row">2 controls</th><td>30</td><td>0</td><td>0</td><td class="na">n/a</td><td>0</td><td>0</td><td class="na">n/a</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button type="button" class="more" id="t1-more" aria-controls="t1" aria-expanded="false" hidden>Show all 9 rows</button>
+    <p class="footnotes">Orig. = original adapter; Start = start-time patch; Disp. = dispatch-time patch (Codex only). Codex runs use multi-agent V2; the first three Codex rows each cover three delivery modes (first diff, changed snapshot, identical replay). Shading: <span class="sw k-m" aria-hidden="true"></span>&nbsp;misattribution and <span class="sw k-o" aria-hidden="true"></span>&nbsp;missing expected output (cells marked <sup>b</sup>), both violations; <span class="sw k-oi" aria-hidden="true"></span>&nbsp;hatched, an omission the invariant allows. <sup>a</sup>&nbsp;Interrupt issued by the server or another client. <sup>b</sup>&nbsp;Required paths, a violation (missing expected output); other omissions are allowed, as both adapters mark every report possibly incomplete. <sup>c</sup>&nbsp;Four scenarios, every schedule without preemption; within one preemption Disp. misattributes in none of 22,074 and omits in 6,760. Misattributions reproduced identically on re-run; in row <span class="math">E</span> two Start ones each had a re-run stall under load and failed 3 of 3 when re-run alone.</p>
+
+    <h3>What goes wrong in each adapter</h3>
+    <div class="cards two">
+      <div class="card"><h4>Codex ACP</h4><p>The event handler assigns a child turn it has not seen to the <em>current</em> root turn. Each request builds a new handler whose disposal clears these bindings, but the session’s child subscriptions survive and route into whichever request is current. We found no failure when A completes normally: under multi-agent V2 the adapter holds A open until the child’s <code>turn/completed</code>, up to a 10-minute timeout.</p></div>
+      <div class="card"><h4>Claude ACP</h4><p>The adapter records child edits into the session’s mutable <code>activeTurn</code>. When the CLI ends A’s turn while A’s background subagent runs, the adapter holds A open; a B sent meanwhile becomes active when the CLI echoes it, and a subagent edit after that echo lands in B’s report. We did not model cancellation.</p></div>
+    </div>
+
+    <h3>Beyond the two adapters</h3>
+    <p>Writing a provider stub is the main per-adapter cost, so we also read the event-to-report path of eight further open-source ACP implementations at pinned main-branch commits and classified how each attributes per-turn output. The screen found no other instance. Work outliving its request is necessary for the bug but not sufficient: OpenCode also lets background children survive a cancelled turn but hands them to a muted consumer that cannot write B’s report.</p>
+    <details class="paperfig">
+      <summary>Show the source screen (Table II)</summary>
+      <div class="table-wrap">
+        <table class="tbl">
+          <caption class="sr-only">Table II. Source screen of ACP implementations</caption>
+          <thead><tr><th class="l" scope="col">System</th><th class="l" scope="col">Attribution (guard)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Codex ACP<sup>*</sup></th><td class="l">arrival-time</td></tr>
+            <tr><th scope="row">Claude ACP<sup>*</sup></th><td class="l">arrival-time (child edits)</td></tr>
+            <tr><th scope="row">Muse ACP</th><td class="l">explicit turn id</td></tr>
+            <tr><th scope="row">Gemini CLI</th><td class="l">prompt-local</td></tr>
+            <tr><th scope="row">Pi ACP</th><td class="l">arrival window (settle, drain)</td></tr>
+            <tr><th scope="row">OpenCode</th><td class="l">msg-id anchor (1 prompt, drain)</td></tr>
+            <tr><th scope="row">Goose</th><td class="l">session snapshot (1 run, drain)</td></tr>
+            <tr><th scope="row">fast-agent</th><td class="l">arrival window (lock, merge)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnotes">A purposive sample. A guard means only that we found no reachable failing path. Codex, Claude, and Muse report AIR file changes, Pi ACP usage and files, the others usage. Mistral Vibe reports only a session total, Cline no per-turn output. Guarded implementations carry origin explicitly (Muse), keep state unreachable across requests (Gemini CLI), or prevent arrival during B by rejecting or serializing prompts or draining the previous turn. <sup>*</sup>&nbsp;Found by source review; reproduced by Turnstile.</p>
+    </details>
+  </div>
+</section>
+
+<section id="impossibility">
+  <div class="container">
+    <span class="kicker">Theory</span>
+    <h2>No exact attribution on the typed Codex 0.160.1 wire</h2>
+    <p class="lead">We model Codex 0.160.1 by six premises of multi-agent V2 without hooks, read in its source (P1&ndash;P6) and the adapter by three conditions (Q1&ndash;Q3) that, by our source trace, codex-acp’s default mode meets (Q1 if its interrupt lands in time). Among the premises: <code>followup_task</code> and <code>send_message</code> emit the same item under the caller’s turn, and only the former’s mail is a trigger, which can start a new turn with the caller’s turn as parent (P1); and, apart from completion items, which an interrupted child turn never sends (P5), no typed notification, reply, or history read shows a mail’s tool, its trigger flag, or a turn’s parent or root id (P4).</p>
+    <div class="theorem">
+      <p><b>Theorem 1</b> (no exact attribution on the typed Codex 0.160.1 wire). Under P1&ndash;P6, no adapter meeting Q1&ndash;Q3 in <span class="math">E</span> is exact; a safe one clears B’s completeness flag in <span class="math">E</span>, where B’s report is complete.</p>
+    </div>
+    <p>The witness is a pair of executions, <span class="math">E</span> and <span class="math">E&prime;</span>, that give the adapter identical input (Lemma 1). Switch between them below: the events the adapter sees stay fixed, and only the hidden facts change.</p>
+
+    <div class="witness" id="witness" data-exec="E">
+      <div class="w-top">
+        <div class="seg-toggle w-toggle" role="group" aria-label="Choose the execution">
+          <button type="button" data-exec="E" aria-pressed="true"><span class="math">E</span></button>
+          <button type="button" data-exec="Ep" aria-pressed="false"><span class="math">E&prime;</span></button>
+        </div>
+        <p>Same messages, same ids, same timing. What differs is invisible on the typed wire.</p>
+      </div>
+      <div class="table-wrap" style="margin:0">
+        <table class="wt">
+          <caption class="sr-only">The witness pair of Theorem 1</caption>
+          <colgroup><col class="c-n"><col><col class="c-hid"></colgroup>
+          <thead>
+            <tr><th class="n" scope="col"><span class="sr-only">Step</span></th><th scope="col">Seen by the adapter, same in both</th><th class="hidcol" scope="col">Hidden, in <span class="math w-cur">E</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="n">1</td><td><span class="math">&rho;<sub>A</sub></span> spawns <span class="math">c</span>; <span class="math">c</span>’s turn <span class="math">v</span> runs</td><td class="hidcol"></td></tr>
+            <tr><td class="n">2</td><td><span class="math">&rho;<sub>A</sub></span> mails <span class="math">c</span></td><td class="hidcol"><span class="hidbox"><span class="ve">task<span class="tool">followup_task</span></span><span class="vep">plain message<span class="tool">send_message</span></span></span></td></tr>
+            <tr><td class="n">3</td><td>client cancels A; <span class="math">&rho;<sub>A</sub></span> ends</td><td class="hidcol"></td></tr>
+            <tr><td class="n">4</td><td>B’s prompt is forwarded; <span class="math">&rho;<sub>B</sub></span> starts</td><td class="hidcol"></td></tr>
+            <tr><td class="n">5</td><td><span class="math">&rho;<sub>B</sub></span> mails <span class="math">c</span></td><td class="hidcol"><span class="hidbox"><span class="ve">plain message<span class="tool">send_message</span></span><span class="vep">task<span class="tool">followup_task</span></span></span></td></tr>
+            <tr><td class="n">6</td><td><span class="math">&rho;<sub>B</sub></span> interrupts <span class="math">c</span>; <span class="math">v</span> ends</td><td class="hidcol"></td></tr>
+            <tr><td class="n">7</td><td>new turn <span class="math">u</span> takes both mails, edits <span class="math">x</span></td><td class="hidcol"><span class="hidbox"><span class="ve">parent <span class="math">&rho;<sub>A</sub></span></span><span class="vep">parent <span class="math">&rho;<sub>B</sub></span></span></span></td></tr>
+            <tr><td class="n">8</td><td><span class="math">&rho;<sub>B</sub></span> interrupts <span class="math">u</span>; <span class="math">&rho;<sub>B</sub></span> ends; report due</td><td class="hidcol"></td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td class="n"></td><th scope="row">Owner of <span class="math">x</span></th><td class="hidcol"><span class="hidbox owner"><span class="ve">A</span><span class="vep">B</span></span></td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="w-outs" aria-live="polite">
+        <div class="w-out e"><p><b>In <span class="math">E</span>, <span class="math">x</span> is A’s work.</b> A report for B that lists <span class="math">x</span> is unsound. In the 792 of 952 schedules where <span class="math">u</span>’s diff precedes B’s report, the original and start-time builds list <span class="math">x</span> in B’s report: a misattribution here.</p></div>
+        <div class="w-out ep"><p><b>In <span class="math">E&prime;</span>, <span class="math">x</span> is B’s own work.</b> A report for B that leaves <span class="math">x</span> out is incomplete, so a safe adapter must clear the completeness flag. In the same 792 schedules the dispatch-time patch omits <span class="math">x</span> with a warning: B’s edit is missing here.</p></div>
+      </div>
+      <p class="w-same">Because the input is identical, the adapter publishes one report for B in both runs. If it lists <span class="math">x</span>, it is unsound in <span class="math">E</span>; if not, it is incomplete in <span class="math">E&prime;</span>, so a safe adapter must clear the flag there, and so also in <span class="math">E</span>.</p>
+    </div>
+    <details class="paperfig">
+      <summary>Show the paper figure (Fig. 2)</summary>
+      <img src="assets/fig2.png" width="1223" height="489" loading="lazy" alt="Fig. 2 of the paper: eight events that are the same in E and E prime, and, hidden from the adapter, which mail is a task and so the parent of turn u: rho A in E, rho B in E prime.">
+    </details>
+
+    <p style="margin-top:22px">Turnstile renders the pair as one message sequence with two ledgers (<a href="#t1">Table I</a>, pair rows), so the run shows how each build answers this ambiguity, not that both executions occur on real Codex; that rests on P1&ndash;P6. Every build answers both runs alike. No other scenario starts a child turn on two requests’ mail, so Theorem 1 explains no other failure.</p>
+
+    <h3>Origin links suffice</h3>
+    <p>Proposition 1 shows what suffices. Take a <em>lineage rule</em> that maps each edit message received before a report for <span class="math">r</span> to a request, or to “unknown”, using only messages received before that report. If the rule never names a wrong request (<em>truthful</em>), then reporting <span class="math">x</span> for <span class="math">r</span> exactly when some evidence for <span class="math">x</span> maps to <span class="math">r</span>, and claiming completeness only when nothing maps to unknown, is safe; if the rule also never answers unknown (<em>timely</em>), it is exact.</p>
+    <p>Codex 0.162.0 adds <code>rootTurnId</code> to turns and their lifecycle notifications, which separates <span class="math">E</span> from <span class="math">E&prime;</span>. By our source reading, consistent with single live runs, mapping an edit to the request whose root turn is the <code>rootTurnId</code> on the <code>turn/started</code> of the edit’s turn is truthful and timely under conditions stated in the paper, and so makes the rule exact there. Neither the pinned nor the current codex-acp reads that field.</p>
+  </div>
+</section>
+
+<section id="fixes">
+  <div class="container">
+    <span class="kicker">Fixes</span>
+    <h2>Start-time versus dispatch-time binding</h2>
+    <p class="lead">We evaluated two fixes. They differ in which event decides the request a child’s edits belong to.</p>
+    <div class="cards two">
+      <div class="card">
+        <h4>Start-time binding (Codex and Claude)</h4>
+        <ul>
+          <li>Binds each child to the root turn current when the child’s start arrives. Both patches pass our reproduction tests and the upstream file-report tests (Codex 28/28, Claude 34/34).</li>
+          <li>Removes all 39 Claude failures, but A’s child edits after A’s report then go unreported. The Claude patch still misattributes a subagent launched or resumed by earlier work during a later request, and it failed the live run in which Claude Code resumed the subagent during B.</li>
+          <li>Leaves 174 Codex failures: a child’s <code>turn/started</code> can itself arrive after B’s prompt, which binds the child to B (Fig. 1). It misattributes in 620 of 996 sibling or grandchild schedules.</li>
+        </ul>
+        <span class="tag">Still an arrival-time proxy</span>
+      </div>
+      <div class="card">
+        <h4>Dispatch-time binding (Codex)</h4>
+        <ul>
+          <li>Binds a child turn through the item that dispatched it: a spawn or follow-up item names the child’s thread under the dispatching turn’s id. The wire does not say which dispatch started which child turn, so the patch pairs them in arrival order and grades each binding <em>named</em>, <em>paired</em>, or <em>uncertain</em>; uncertain work is left out, and the report says so.</li>
+          <li>Removes every misattribution in Table I, including where an A-era sibling or grandchild of A’s child follows it up while B does. Within one preemption, it misattributes in none of 22,074 schedules.</li>
+          <li>Omits B’s own child edit in 226 of 996 sibling or grandchild schedules (6,760 of 22,074 within one preemption), and misses it in 40 of 84 schedules of the no-dispatch control.</li>
+        </ul>
+        <span class="tag">No misattribution here, at a cost in recall</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="tbl">
+        <caption class="sr-only">Schedules per build, by scenario group</caption>
+        <thead><tr><th class="l" scope="col">Scenario group (schedules)</th><th scope="col">Original</th><th scope="col">Start-time</th><th scope="col">Dispatch-time</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Codex, A cancelled, interrupted, or completed (956): misattributing</th><td class="m">581</td><td class="m">174</td><td>0</td></tr>
+          <tr><th scope="row">Claude, background hand-off (111): misattributing</th><td class="m">39</td><td>0</td><td class="na">n/a</td></tr>
+          <tr><th scope="row">Codex sibling or grandchild, no preemption (996): misattributing</th><td class="m">620</td><td class="m">620</td><td>0</td></tr>
+          <tr><th scope="row">&hellip; the same, omitting B’s own child edit</th><td>0</td><td>0</td><td class="oi">226</td></tr>
+          <tr><th scope="row">Codex sibling or grandchild, within one preemption (22,074): misattributing / omitting</th><td class="na">not run</td><td class="na">not run</td><td class="oi">0 / 6,760</td></tr>
+          <tr><th scope="row">Codex control without a dispatch item (84): missing expected output</th><td>0</td><td>0</td><td class="o">40</td></tr>
+          <tr><th scope="row">Codex control with a follow-up item (254): violating</th><td>0</td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnotes">Shading as in Table I: the amber cell is a violation (missing expected output); hatched cells are omissions the invariant allows. The no-dispatch control gives A’s child a new turn during B with no dispatch item, although real Codex emits one. The only origin evidence is Codex’s completion notice naming B’s turn; when it arrives after B’s report, the dispatch-time patch omits the edit and flags the report. This is missing expected output, not misattribution, in a scenario harsher than the behavior it abstracts, and it does not show that the loss is unavoidable. The patched adapter passes its suite except that dispatch-less test (1,815 passed, 36 skipped, Codex-binary tests excluded). The sibling and grandchild scenarios have millions of legal orders each, hence the preemption bound.</p>
+  </div>
+</section>
+
+<section id="live">
+  <div class="container">
+    <span class="kicker">Live runs</span>
+    <h2>Single runs against the real CLIs</h2>
+    <p class="lead">Turnstile uses scripted provider stubs. In 16 live runs we replaced the stub with the real CLI: Codex 0.160.1 and 0.162.0, and Claude Code 2.1.309. Each row is one run with one live order. The rows show that the orders Turnstile reports occur with real CLIs and real models; they say nothing about how often those orders occur.</p>
+    <p>The prompts fix which request owns each file: <code>a-root.txt</code> and <code>a-child.txt</code> belong to A; <code>b.txt</code>, <code>b-root.txt</code>, and <code>b-child.txt</code> belong to B.</p>
+    <dl class="scen">
+      <dt>Codex, cancel</dt><dd>A spawns a child that waits 25&nbsp;s and then writes <code>a-child.txt</code>. The client cancels A three seconds after the child’s thread appears, then sends B, which waits 45&nbsp;s and writes <code>b.txt</code>.</dd>
+      <dt>Codex, follow-up</dt><dd>A’s child writes <code>a-child.txt</code>; B then sends the same child a <code>followup_task</code> that writes <code>b-child.txt</code>.</dd>
+      <dt>Claude, queued</dt><dd>A launches a background subagent that waits 25&nbsp;s and writes <code>a-child.txt</code>; A writes <code>a-root.txt</code>. B is sent as soon as the CLI ends A’s root turn, while A’s prompt is still open.</dd>
+      <dt>Claude, after A</dt><dd>The same prompts, but B is sent only after A has been answered.</dd>
+      <dt>Claude, resumed</dt><dd>The waits use a plain <code>sleep</code>, which Claude Code blocks, so the model moved the wait into a background shell. The subagent then stopped, and Claude Code started it again during B, once that shell finished. B wrote nothing of its own in these runs.</dd>
+    </dl>
+    <div class="table-wrap">
+      <table class="tbl live">
+        <caption class="sr-only">The 16 live runs</caption>
+        <thead><tr><th scope="col">Build</th><th scope="col">Scenario</th><th scope="col">A’s report</th><th scope="col">B’s report</th><th scope="col">Verdict</th></tr></thead>
+        <tbody>
+          <tr class="sub"><th colspan="5" scope="rowgroup">Codex 0.160.1</th></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt, <b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Start-time</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Dispatch-time</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">cancel, first attempt</span></td><td class="files" data-label="A’s report"><span class="v none">(empty)</span></td><td class="files" data-label="B’s report"><span class="v none">(empty)</span></td><td data-label="Verdict"><span class="v chip k-none">no verdict</span></td></tr>
+          <tr class="sub"><th colspan="5" scope="rowgroup">Codex 0.162.0 <span class="muted">(adds <code>rootTurnId</code>)</span></th></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt, <b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">follow-up</span></td><td class="files" data-label="A’s report"><span class="v">a-child.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-child.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Lineage, per-prompt map</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt, <b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Lineage, per-prompt map</span></td><td data-label="Scenario"><span class="v">follow-up</span></td><td class="files" data-label="A’s report"><span class="v">a-child.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-child.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Lineage, per-session map</span></td><td data-label="Scenario"><span class="v">cancel</span></td><td class="files" data-label="A’s report"><span class="v none">unavailable</span></td><td class="files" data-label="B’s report"><span class="v">b.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Lineage, per-session map</span></td><td data-label="Scenario"><span class="v">follow-up</span></td><td class="files" data-label="A’s report"><span class="v">a-child.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-child.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr class="sub"><th colspan="5" scope="rowgroup">Claude Code 2.1.309</th></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">queued</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-root.txt, <b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Patch</span></td><td data-label="Scenario"><span class="v">queued</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-root.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">after A</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt, a-child.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-root.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Patch</span></td><td data-label="Scenario"><span class="v">after A</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt, a-child.txt</span></td><td class="files" data-label="B’s report"><span class="v">b-root.txt</span></td><td data-label="Verdict"><span class="v chip">correct</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Original</span></td><td data-label="Scenario"><span class="v">resumed</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt</span></td><td class="files" data-label="B’s report"><span class="v"><b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+          <tr><td data-label="Build"><span class="v">Patch</span></td><td data-label="Scenario"><span class="v">resumed</span></td><td class="files" data-label="A’s report"><span class="v">a-root.txt</span></td><td class="files" data-label="B’s report"><span class="v"><b>a-child.txt</b></span></td><td data-label="Verdict"><span class="v chip k-mis">misattribution</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnotes">Bold file names are another request’s edit. “Patch” is the Claude start-time patch; “Lineage” is an experimental codex-acp patch that reads <code>rootTurnId</code>. In the Codex first attempt the model wrote files with <code>printf</code>, which Codex turn diffs leave out, so both reports were empty; A’s root turn had also ended before the cancel arrived, so A was answered normally and its report was available. In the Claude queued run with the patch, A’s child edit arrived after A’s report and is in neither report, a gap the paper states.</p>
+    <p>In every Codex cancel run in the table except the first attempt, the child’s <code>turn/started</code> arrived during A, so the live order lies in the early-start class of Fig. 3, where the original build fails and both patches are correct; the live verdicts of the original, start-time, and dispatch-time builds match Turnstile’s for that class. The Claude patch failed on the resume, where Claude Code restarted the subagent itself during B; no Turnstile Claude schedule contains that order. On 0.162.0, each child turn’s <code>rootTurnId</code> named its dispatching request. The lineage patch failed a cancel run with a per-prompt map, the per-request lifetime behind the original defect, and passed another with a per-session one. It has not been explored with Turnstile, whose Codex stub models 0.160.1.</p>
+  </div>
+</section>
+
+<section id="explainer">
+  <div class="container">
+    <span class="kicker">Explainer</span>
+    <h2>The paper in nine scenes</h2>
+    <p class="lead">An interactive explainer walks through the setting, why arrival order varies, the bug, three rules for crediting a child’s edit, the witness behind Theorem 1, the fix, how Turnstile explores, what the runs found, and what the work does not show. Its data line is generated from the runs with the same scripts as Table I and Fig. 3.</p>
+  </div>
+  <div class="container wide">
+    <div class="frame-wrap" id="frame-wrap">
+      <iframe data-src="explainer.html" title="Interactive explainer: Attributing Subagent Work, in nine scenes" loading="lazy"></iframe>
+      <a class="poster" href="explainer.html">
+        <svg viewBox="0 0 320 170" aria-hidden="true">
+          <g stroke="#cfcdc5" stroke-width="1.5"><path d="M40 30v128 M120 30v128 M200 30v128 M280 30v128"/></g>
+          <g font-family="-apple-system, system-ui, sans-serif" font-size="11" font-weight="600" fill="#45443f" text-anchor="middle"><text x="40" y="20">client</text><text x="120" y="20">adapter</text><text x="200" y="20">root</text><text x="280" y="20">child</text></g>
+          <g stroke="#1c1c1a" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M40 46h76 M110 42l6 4-6 4"/><path d="M200 64h-76 M130 60l-6 4 6 4"/><path d="M40 82h76 M110 78l6 4-6 4"/></g>
+          <g stroke="#D03B3B" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M280 112h-156 M130 108l-6 4 6 4"/><path d="M120 146h-76 M50 142l-6 4 6 4"/></g>
+          <g font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#67655f" text-anchor="middle"><text x="78" y="40">A</text><text x="78" y="76">B</text><text x="200" y="106" fill="#B12F2F">edit made for A</text><text x="82" y="140" fill="#B12F2F">B’s report</text></g>
+        </svg>
+        <span>
+          <span class="p-eyebrow">Interactive, nine scenes</span>
+          <span class="p-title">Open the explainer full screen</span>
+          <span class="p-text">It opens on its own page, with room for the figure and the step captions. Step through with its buttons, or swipe left or right on the figure.</span>
+          <span class="btn"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 5.5v5l4-2.5z" fill="currentColor"/></svg>Open the explainer</span>
+        </span>
+      </a>
+    </div>
+    <p class="frame-links"><a href="explainer.html">Open the explainer full screen</a> <span class="muted">&middot; inside the frame, use its buttons, or click it and use the arrow keys.</span></p>
+  </div>
+</section>
+
+<section id="limitations">
+  <div class="container">
+    <span class="kicker">Limitations</span>
+    <h2>What this shows, and what it does not</h2>
+    <div class="limits">
+      <div class="card"><h4>Scope and frequency</h4><p>Exploration is exhaustive only within hand-written scenarios shaped by defects that source review had already found, and for four of them only within a preemption bound. We did not measure how often providers produce these orders (a live run shows one order) and found no open-source client that consumes the report, so we claim neither a frequency nor harm to users.</p></div>
+      <div class="card"><h4>Model limits</h4><p>Turnstile models no timers (codex-acp’s 10-minute wait), not Codex’s V1 protocol, and no Codex version after 0.160.1; 0.162.0 ran only live. In the cancel and interrupt scenarios the child’s turn ends “interrupted”, although a root interrupt does not stop children. The proofs rest on our reading of Codex and codex-acp source, not on a mechanized model. The Claude assumptions were checked against the adapter and six live runs; two had a CLI resume, which the stub omits.</p></div>
+      <div class="card"><h4>Contract</h4><p>Both adapters and their tests aggregate child-turn paths, which the AIR documentation leaves unassigned. The invariant is our reading and has not yet been raised with the maintainers.</p></div>
+      <div class="card"><h4>Fixes</h4><p>All patches are experimental. Besides the gaps stated above (the Claude patch misattributes a subagent launched or resumed by earlier work during a later request, and the <code>rootTurnId</code> rule is exact only under the conditions stated in the paper), the Codex start-time and <code>rootTurnId</code> patches drop child turns started before their spawn item. The dispatch-time patch can still misattribute a child turn that has no dispatch item or was never observed (for example, a sleeping child woken by mail), which we do not model.</p></div>
+      <div class="card"><h4>Independence</h4><p>Violations within an adapter share one mechanism, so counts measure the failing region, not independent bugs. Both adapters are main-branch snapshots. All reviews of the tool, fixes, and proofs were internal.</p></div>
+      <div class="card"><h4>The witness pair</h4><p>Turnstile’s pair rows show how each build answers the ambiguity of Theorem 1, not that both executions occur on real Codex; that rests on premises read in the Codex source. The live runs did not try to produce the pair.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="citation">
+  <div class="container">
+    <span class="kicker">Reference</span>
+    <h2>Citation</h2>
+    <p>If you refer to this work, please cite the manuscript:</p>
+    <div class="bib">
+      <div class="bib-bar"><span>BibTeX</span><button type="button" class="copy" id="copy-bib">Copy</button></div>
+      <pre class="bibtex" id="bibtex">@misc{josyula2026attributing,
+  title  = {Attributing Subagent Work in Coding-Agent Protocol Adapters},
+  author = {Josyula, Rajasekhar and Vedantham, Lakshmi Sravya},
+  year   = {2026},
+  note   = {Manuscript}
+}</pre>
+    </div>
+    <p class="sr-only" id="copy-status" aria-live="polite"></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Rajasekhar Josyula and Lakshmi Sravya Vedantham.</p>
+    <p>Page layout after the Nerfies family of academic project pages.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function motionOK() { return !(mq && mq.matches); }
+  function h(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+  /* ---------- Fig. 3: numbers from the paper's Fig. 3 (FINAL_RESULTS.md, "Arrival classes") ---------- */
+  var BUILDS = ['Original', 'Start-time', 'Dispatch-time'];
+  var KIND = { mis: 'misattribution', miss: 'missing output' };
+  var PANELS = [
+    { id: 'a', title: 'Codex, A cancelled or interrupted', expect: 812,
+      classes: [
+        { key: 'quiet', name: 'no edit in B', n: 231, desc: 'No edit by the child reached the adapter between B’s prompt and B’s report.' },
+        { key: 'early', name: 'early start', n: 407, desc: 'The child’s edit reached the adapter between B’s prompt and B’s report, and the child had started before B’s prompt.' },
+        { key: 'late', name: 'late start', n: 174, desc: 'The child’s edit reached the adapter between B’s prompt and B’s report, and the child started after B’s prompt.' }
+      ],
+      fails: { 'Original': { early: 'mis', late: 'mis' }, 'Start-time': { late: 'mis' }, 'Dispatch-time': {} } },
+    { id: 'b', title: 'Claude, background hand-off', expect: 111,
+      classes: [
+        { key: 'quiet', name: 'no edit in B', n: 72, desc: 'The subagent’s edit did not reach the adapter between the CLI’s echo of B’s prompt and B’s report.' },
+        { key: 'during', name: 'edit in B', n: 39, desc: 'The subagent’s edit reached the adapter after the CLI echoed B’s prompt and before B’s report.' }
+      ],
+      fails: { 'Original': { during: 'mis' }, 'Start-time': {}, 'Dispatch-time': null } },
+    { id: 'c', title: 'Codex control, no dispatch item', expect: 84,
+      classes: [
+        { key: 'before', name: 'notice before', n: 44, desc: 'Codex’s completion notice for the child’s new turn, the only evidence that B dispatched it, came before B’s report.' },
+        { key: 'after', name: 'notice after', n: 40, desc: 'Codex’s completion notice for the child’s new turn came after B’s report, so at report time nothing tied B’s own edit to B.' }
+      ],
+      fails: { 'Original': {}, 'Start-time': {}, 'Dispatch-time': { after: 'miss' } } }
+  ];
+
+  function failCount(p, bn) {
+    var f = p.fails[bn], bad = 0, kind = '';
+    if (!f) return null;
+    p.classes.forEach(function (c) { if (f[c.key]) { bad += c.n; kind = f[c.key]; } });
+    return { bad: bad, kind: kind };
+  }
+
+  function summaryText(bn) {
+    if (bn === 'all') return 'Hover over, tap, or focus a segment to see its class, its size, and which builds fail there. Pick a build to compare its strips across the three groups.';
+    var parts = PANELS.map(function (p) {
+      var r = failCount(p, bn);
+      if (!r) return '(' + p.id + ') not applicable';
+      if (!r.bad) return '(' + p.id + ') clean in all ' + p.total;
+      return '(' + p.id + ') ' + (r.kind === 'mis' ? 'misattributes in ' : 'misses B’s own edit in ') + r.bad + ' of ' + p.total;
+    });
+    return bn + ': ' + parts.join('; ') + '.';
+  }
+
+  function renderDetail(box, p, c) {
+    box.textContent = '';
+    if (!p) {
+      box.appendChild(h('p', 'f3-hint', 'Hover over, tap, or focus a segment to see its class, its size, and which builds fail there.'));
+      return;
+    }
+    var head = h('p', 'f3-dhead');
+    head.appendChild(h('b', null, '(' + p.id + ') '));
+    head.appendChild(document.createTextNode(p.title + ' · '));
+    head.appendChild(h('b', null, c.name));
+    box.appendChild(head);
+    var grid = h('div', 'f3-dgrid');
+    var left = h('div');
+    var val = h('p', 'f3-dval');
+    val.appendChild(h('strong', null, String(c.n)));
+    val.appendChild(document.createTextNode('of ' + p.total + ' schedules'));
+    left.appendChild(val);
+    left.appendChild(h('p', 'f3-ddesc', c.desc));
+    grid.appendChild(left);
+    var ul = h('ul', 'f3-dbuilds');
+    BUILDS.forEach(function (bn) {
+      var f = p.fails[bn];
+      var k = f ? (f[c.key] || 'ok') : 'na';
+      var li = h('li');
+      li.appendChild(h('span', 'sw k-' + k));
+      var t = h('span');
+      t.appendChild(h('span', 'f3-bn', bn + ': '));
+      t.appendChild(document.createTextNode(k === 'na' ? 'not applicable' : (k === 'ok' ? 'clean' : 'fails, ' + KIND[k])));
+      li.appendChild(t);
+      ul.appendChild(li);
+    });
+    grid.appendChild(ul);
+    box.appendChild(grid);
+  }
+
+  function buildFig3(root) {
+    var panelsEl = root.querySelector('#f3-panels');
+    var detail = root.querySelector('#f3-detail');
+    var summary = root.querySelector('#f3-summary');
+    var segs = [], labels = [], rows = [];
+    PANELS.forEach(function (p) {
+      p.total = p.classes.reduce(function (s, c) { return s + c.n; }, 0);
+      if (p.total !== p.expect) console.warn('Fig. 3 panel ' + p.id + ' sums to ' + p.total + ', expected ' + p.expect);
+      var box = h('div', 'f3-panel');
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', '(' + p.id + ') ' + p.title + ', ' + p.total + ' schedules');
+      var t = h('p', 'f3-title');
+      t.appendChild(h('b', null, '(' + p.id + ') '));
+      t.appendChild(document.createTextNode(p.title));
+      t.appendChild(h('span', 'f3-total', p.total + ' schedules'));
+      box.appendChild(t);
+      var head = h('div', 'f3-row f3-head');
+      head.setAttribute('aria-hidden', 'true');
+      head.appendChild(h('span', 'f3-rl'));
+      var lt = h('div', 'f3-track f3-labels');
+      p.classes.forEach(function (c) {
+        var l = h('span', 'f3-clab');
+        l.style.flex = c.n + ' 1 0px';
+        l.setAttribute('data-panel', p.id);
+        l.setAttribute('data-cls', c.key);
+        l.appendChild(h('span', 'f3-cname', c.name));
+        l.appendChild(h('span', 'f3-cn', String(c.n)));
+        lt.appendChild(l);
+        labels.push(l);
+      });
+      head.appendChild(lt);
+      head.appendChild(h('span', 'f3-cnt'));
+      box.appendChild(head);
+      BUILDS.forEach(function (bn) {
+        var row = h('div', 'f3-row');
+        row.setAttribute('data-build', bn);
+        row.appendChild(h('span', 'f3-rl', bn));
+        var tr = h('div', 'f3-track');
+        var f = p.fails[bn];
+        if (!f) {
+          row.classList.add('f3-na');
+          tr.appendChild(h('span', 'f3-natext', 'not applicable (Codex only)'));
+          row.appendChild(tr);
+          row.appendChild(h('span', 'f3-cnt', 'n/a'));
+        } else {
+          p.classes.forEach(function (c) {
+            var k = f[c.key] || '';
+            var s = h('button', 'f3-seg ' + (k ? 'k-' + k : 'k-ok'));
+            s.type = 'button';
+            s.style.flexGrow = String(c.n);
+            s.setAttribute('data-panel', p.id);
+            s.setAttribute('data-cls', c.key);
+            s.setAttribute('aria-label', '(' + p.id + ') ' + bn + ', ' + c.name + ': ' + c.n + ' of ' + p.total + ' schedules, ' + (k ? KIND[k] : 'clean'));
+            s.appendChild(h('span', 'f3-fill'));
+            s._p = p; s._c = c;
+            tr.appendChild(s);
+            segs.push(s);
+          });
+          row.appendChild(tr);
+          row.appendChild(h('span', 'f3-cnt', String(failCount(p, bn).bad)));
+        }
+        rows.push(row);
+        box.appendChild(row);
+      });
+      panelsEl.appendChild(box);
+    });
+
+    var sticky = null;
+    function show(sel) {
+      renderDetail(detail, sel && sel.p, sel && sel.c);
+      segs.forEach(function (s) { s.classList.toggle('on', !!sel && s._p === sel.p && s._c === sel.c); });
+      labels.forEach(function (l) { l.classList.toggle('on', !!sel && l.getAttribute('data-panel') === sel.p.id && l.getAttribute('data-cls') === sel.c.key); });
+    }
+    segs.forEach(function (s) {
+      var sel = { p: s._p, c: s._c };
+      s.addEventListener('click', function () { sticky = sel; show(sel); });
+      s.addEventListener('focus', function () { sticky = sel; show(sel); });
+      s.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') show(sel); });
+    });
+    panelsEl.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') show(sticky); });
+
+    // Reserve the tallest detail so the page never jumps while hovering.
+    var probe = detail.cloneNode(false);
+    probe.removeAttribute('id');
+    probe.removeAttribute('aria-live');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.className = 'f3-detail probe';
+    detail.parentNode.appendChild(probe);
+    var sprobe = summary.cloneNode(false);
+    sprobe.removeAttribute('id');
+    sprobe.removeAttribute('aria-live');
+    sprobe.setAttribute('aria-hidden', 'true');
+    sprobe.className = 'f3-summary probe';
+    summary.parentNode.appendChild(sprobe);
+    function reserve() {
+      sprobe.style.width = summary.offsetWidth + 'px';
+      var smax = 0;
+      ['all'].concat(BUILDS).forEach(function (bn) { sprobe.textContent = summaryText(bn); smax = Math.max(smax, sprobe.offsetHeight); });
+      sprobe.textContent = '';
+      summary.style.minHeight = smax + 'px';
+      probe.style.width = detail.offsetWidth + 'px';
+      var max = 0;
+      PANELS.forEach(function (p) { p.classes.forEach(function (c) { renderDetail(probe, p, c); max = Math.max(max, probe.offsetHeight); }); });
+      probe.textContent = '';
+      detail.style.minHeight = max + 'px';
+    }
+
+    var toggles = root.querySelectorAll('.f3-controls button[data-build]');
+    function setBuild(bn) {
+      each(toggles, function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-build') === bn)); });
+      rows.forEach(function (r) { r.classList.toggle('dim', bn !== 'all' && r.getAttribute('data-build') !== bn); });
+      summary.textContent = summaryText(bn);
+    }
+    each(toggles, function (b) { b.addEventListener('click', function () { setBuild(b.getAttribute('data-build')); }); });
+    summary.setAttribute('aria-live', 'off');
+    setBuild('all');
+    summary.setAttribute('aria-live', 'polite');
+    sticky = { p: PANELS[0], c: PANELS[0].classes[2] };
+    show(sticky);
+    reserve();
+    var tid = 0;
+    window.addEventListener('resize', function () { clearTimeout(tid); tid = setTimeout(reserve, 120); });
+  }
+  var fig3 = document.getElementById('fig3');
+  if (fig3) buildFig3(fig3);
+
+  /* ---------- Table I: collapse to the key rows ---------- */
+  var t1 = document.getElementById('t1');
+  var more = document.getElementById('t1-more');
+  if (t1 && more) {
+    t1.classList.add('collapsed');
+    more.hidden = false;
+    more.addEventListener('click', function () {
+      var collapsed = t1.classList.toggle('collapsed');
+      more.setAttribute('aria-expanded', String(!collapsed));
+      more.textContent = collapsed ? 'Show all 9 rows' : 'Show fewer rows';
+    });
+  }
+
+  /* ---------- Theorem 1 witness: flip only the hidden facts ---------- */
+  var w = document.getElementById('witness');
+  if (w) {
+    var wb = w.querySelectorAll('.w-toggle button');
+    var cur = w.querySelector('.w-cur');
+    var setExec = function (x) {
+      if (w.getAttribute('data-exec') === x) return;
+      w.setAttribute('data-exec', x);
+      each(wb, function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-exec') === x)); });
+      cur.textContent = x === 'E' ? 'E' : 'E′';
+      if (!motionOK()) return;
+      each(w.querySelectorAll('.hidbox'), function (box) {
+        box.classList.remove('flip'); void box.offsetWidth; box.classList.add('flip');
+      });
+    };
+    each(wb, function (b) { b.addEventListener('click', function () { setExec(b.getAttribute('data-exec')); }); });
+  }
+
+  /* ---------- Fig. 1: enlarged view on phones ---------- */
+  var f1 = document.getElementById('fig1');
+  if (f1) {
+    var zb = document.getElementById('fig1-zoom');
+    if (zb) {
+      zb.hidden = false;
+      zb.addEventListener('click', function () {
+        var on = f1.classList.toggle('zoomed');
+        zb.setAttribute('aria-pressed', String(on));
+        zb.querySelector('span').textContent = on ? 'Fit to screen' : 'Enlarge figure';
+      });
+    }
+  }
+
+  /* ---------- Explainer: framed only where it fits without scrolling inside ---------- */
+  var fw = document.getElementById('frame-wrap');
+  var ifr = fw && fw.querySelector('iframe[data-src]');
+  if (fw && ifr && window.matchMedia) {
+    var wide = window.matchMedia('(min-width: 981px)');
+    var syncFrame = function () {
+      if (wide.matches && !ifr.getAttribute('src')) ifr.setAttribute('src', ifr.getAttribute('data-src'));
+      fw.classList.toggle('live', wide.matches);
+    };
+    syncFrame();
+    if (wide.addEventListener) wide.addEventListener('change', syncFrame); else if (wide.addListener) wide.addListener(syncFrame);
+  }
+
+  /* ---------- BibTeX copy ---------- */
+  var copyBtn = document.getElementById('copy-bib');
+  var bib = document.getElementById('bibtex');
+  var status = document.getElementById('copy-status');
+  if (copyBtn && bib) {
+    var reset = 0;
+    var done = function (ok) {
+      copyBtn.textContent = ok ? 'Copied' : 'Press Ctrl+C or ⌘C';
+      status.textContent = ok ? 'BibTeX copied to the clipboard.' : 'BibTeX selected; press Control C or Command C to copy.';
+      clearTimeout(reset);
+      reset = setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+    };
+    var fallback = function () {
+      var r = document.createRange();
+      r.selectNodeContents(bib);
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      done(ok);
+    };
+    copyBtn.addEventListener('click', function () {
+      var text = bib.textContent;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>
