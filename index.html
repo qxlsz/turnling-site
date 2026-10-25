@@ -380,6 +380,69 @@ footer p { margin: 0 0 4px; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 .btn.btn-off { background: #fff; color: var(--muted, #6b6a64); border: 1px dashed #c9c7bf; cursor: default; }
+
+/* ---------- live demo ---------- */
+.demo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; margin: 22px 0 10px; }
+.demo-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 18px; }
+.demo-stage { border: 1px solid var(--border); border-radius: var(--radius); background: #fff; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.demo-stage svg { display: block; width: 100%; height: auto; }
+.demo-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.ctrls { display: flex; flex-wrap: wrap; gap: 6px; }
+.ctrl { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--hair); border-radius: 999px; padding: 6px 14px; cursor: pointer; line-height: 1.3; }
+.ctrl:hover { background: var(--soft); }
+.ctrl:disabled { opacity: 0.4; cursor: default; background: #fff; }
+.ctrl.primary { background: #1f1f1d; color: #fff; border-color: #1f1f1d; min-width: 92px; justify-content: center; }
+.ctrl.primary:hover { background: #000; }
+.ctrl svg { width: 12px; height: 12px; flex: none; }
+.narr { border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); padding: 12px 16px 14px; min-height: 172px; }
+.narr p { margin: 0; font-size: 0.95rem; line-height: 1.55; color: var(--ink-2); }
+.dstate { margin: 0; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 14px; font-size: 0.88rem; }
+.dstate dt { color: var(--muted); }
+.dstate dd { margin: 0; font-weight: 600; }
+.dstate .bad { color: #b42b2b; }
+.verdict { border-radius: var(--radius); padding: 10px 16px; font-size: 0.92rem; line-height: 1.5; border: 1px solid var(--border); background: var(--soft); }
+.verdict[hidden] { display: none; }
+.verdict.bad { background: var(--mis-soft); border-color: #efc6c6; }
+.verdict b { display: block; }
+.d-lane { stroke: #d3d1c9; stroke-width: 1; }
+.d-lane.off { stroke-dasharray: 3 4; stroke: #e3e1da; }
+.d-head { font-family: var(--sans); font-size: 13px; font-weight: 650; fill: #1c1c1a; text-anchor: middle; }
+.d-num { font-family: var(--sans); font-size: 11px; fill: #b9b7ae; text-anchor: end; }
+.d-num.on { fill: #67655f; }
+.d-ghost { stroke: #eeede8; stroke-width: 1.3; }
+.d-msg { stroke: #2b2b28; stroke-width: 1.3; fill: none; }
+.d-msg.bad { stroke: var(--mis); stroke-width: 2.2; }
+.d-lbl { font-family: var(--sans); font-size: 12.5px; fill: #2b2b28; text-anchor: middle; }
+.d-lbl .mi { font-family: Georgia, "Times New Roman", serif; font-style: italic; }
+.d-lbl .mono { font-family: var(--mono); font-size: 11.5px; }
+.d-lbl .bad { fill: var(--mis); font-weight: 700; }
+.d-bar { fill: #dedcd4; }
+.d-barlbl { font-family: var(--sans); font-size: 11px; font-weight: 700; fill: #67655f; text-anchor: end; }
+.d-dot { fill: #1f1f1d; }
+.d-dot.bad { fill: var(--mis); }
+.d-badge rect { fill: #1f1f1d; }
+.d-badge.bad rect { fill: var(--mis); }
+.d-badge text { font-family: var(--sans); font-size: 11.5px; font-weight: 600; fill: #fff; text-anchor: middle; }
+.d-badge line { stroke: #1f1f1d; stroke-width: 1; stroke-dasharray: 2 2; }
+.d-badge.bad line { stroke: var(--mis); }
+.d-now { fill: #f3f2ed; }
+svg.compact .d-head { font-size: 11.5px; }
+svg.compact .d-num { font-size: 10px; }
+svg.compact .d-lbl { font-size: 11px; }
+svg.compact .d-lbl .mono { font-size: 10px; }
+svg.compact .d-badge text { font-size: 10.5px; }
+@media (max-width: 900px) {
+  .demo { grid-template-columns: 1fr; }
+  .narr { min-height: 0; }
+}
+@media (max-width: 640px) {
+  .demo-top { flex-direction: column; align-items: stretch; }
+  #demo-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 14px; }
+  #demo-modes button { font-size: 0.8rem; padding: 6px 6px; border-radius: 11px; }
+  .ctrls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ctrl { justify-content: center; padding: 6px 6px; font-size: 0.84rem; }
+  .ctrl.primary { min-width: 0; }
+}
 </style>
 </head>
 <body>
@@ -395,7 +458,7 @@ footer p { margin: 0 0 4px; }
     <li><a class="btn" href="paper.pdf"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9z M9.5 1.5v3h3 M5.5 8h5 M5.5 10.5h5 M5.5 13h3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Paper (PDF)</a></li>
     <li><span class="btn btn-off" title="The code repository is private until the paper is reviewed"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4 1.5 8l4 4 M10.5 4l4 4-4 4 M9.2 2.5 6.8 13.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Code coming soon</span></li>
     <li><a class="btn" href="explainer.html"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 5.5v5l4-2.5z" fill="currentColor"/></svg>Explainer</a></li>
-    <li><a class="btn" href="#citation"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H4.6c0-1.3.4-1.8 1.4-2z M11.4 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H11c0-1.3.4-1.8 1.4-2z" fill="currentColor"/></svg>BibTeX</a></li>
+    <li><span class="btn btn-off" title="A citation will be posted once the paper is published"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H4.6c0-1.3.4-1.8 1.4-2z M11.4 3.5c-1.4.2-2.2 1-2.2 2.6V12h4V8H11c0-1.3.4-1.8 1.4-2z" fill="currentColor"/></svg>BibTeX after publication</span></li>
   </ul>
 </header>
 
@@ -427,6 +490,50 @@ footer p { margin: 0 0 4px; }
 </div>
 
 <main id="main">
+
+<section id="demo">
+  <div class="container wide">
+    <span class="kicker">Live demo</span>
+    <h2>Watch an edit land in the wrong report</h2>
+    <p class="lead">Request A starts a subagent and is then cancelled. The subagent keeps working, and its edit reaches the adapter while request B is running. Play the schedule from Fig. 1 of the paper and switch adapters to see who gets the edit.</p>
+    <div class="demo-top">
+      <div class="seg-toggle" role="group" aria-label="Adapter to watch" id="demo-modes">
+        <button type="button" data-mode="orig" aria-pressed="true">Original adapter</button>
+        <button type="button" data-mode="start" aria-pressed="false">Start-time patch</button>
+        <button type="button" data-mode="disp" aria-pressed="false">Dispatch-time patch</button>
+      </div>
+      <div class="ctrls">
+        <button type="button" class="ctrl" id="demo-back" aria-label="Previous step"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M8 2 4 6l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
+        <button type="button" class="ctrl primary" id="demo-play">Play</button>
+        <button type="button" class="ctrl" id="demo-next" aria-label="Next step">Next<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="ctrl" id="demo-reset">Restart</button>
+      </div>
+    </div>
+    <div class="demo">
+      <div class="demo-stage">
+        <svg id="demo-svg" viewBox="0 0 640 428" role="img" aria-labelledby="demo-svg-t">
+          <title id="demo-svg-t">Animated sequence diagram of the Fig. 1 cancel schedule: client, adapter, root thread and child c, ten steps.</title>
+        </svg>
+      </div>
+      <div class="demo-side">
+        <div class="narr">
+          <span class="label" id="demo-stepno">Ready</span>
+          <p id="demo-text" aria-live="polite"></p>
+        </div>
+        <dl class="dstate" id="demo-state"></dl>
+        <div class="verdict" id="demo-verdict" hidden></div>
+      </div>
+    </div>
+    <p class="note">The demo replays one schedule by hand; it does not run an adapter. Turnstile checks all legal orders of scenarios like this one, and the results below come from those runs.</p>
+
+    <h3>The work in three steps</h3>
+    <div class="cards">
+      <div class="card"><h4>1. The problem</h4><p>A subagent can outlive the request that started it. Adapters keep per-request state, so a late edit gets credited to whichever request is current when it arrives. The report then has the right request id and the wrong files, and the editor cannot tell.</p></div>
+      <div class="card"><h4>2. How we check it</h4><p>We state an <b>origin-attribution invariant</b>: a request’s report lists only work that request dispatched. <b>Turnstile</b> runs the unmodified adapter against a scripted provider under the event orders the protocol allows, and checks every report against a ledger of origins.</p></div>
+      <div class="card"><h4>3. How we fix it</h4><p>Bind each child to the request that dispatched it, read from the spawn item, not to the request that is current when its events arrive. On Codex this removes every misattribution in our scenarios, at the cost of sometimes leaving an edit out instead of guessing. We also prove that on the typed Codex 0.160.1 wire, adapters meeting stated conditions cannot always attribute exactly, and that origin links on the event stream suffice.</p></div>
+    </div>
+  </div>
+</section>
 
 <section id="problem">
   <div class="container">
@@ -782,17 +889,7 @@ footer p { margin: 0 0 4px; }
   <div class="container">
     <span class="kicker">Reference</span>
     <h2>Citation</h2>
-    <p>If you refer to this work, please cite the manuscript:</p>
-    <div class="bib">
-      <div class="bib-bar"><span>BibTeX</span><button type="button" class="copy" id="copy-bib">Copy</button></div>
-      <pre class="bibtex" id="bibtex">@misc{josyula2026attributing,
-  title  = {Attributing Subagent Work in Coding-Agent Protocol Adapters},
-  author = {Josyula, Rajasekhar and Vedantham, Lakshmi Sravya},
-  year   = {2026},
-  note   = {Manuscript}
-}</pre>
-    </div>
-    <p class="sr-only" id="copy-status" aria-live="polite"></p>
+    <p>The paper is not yet published. A BibTeX entry will be posted here once it is. Until then, please link to this page.</p>
   </div>
 </section>
 
@@ -1080,37 +1177,254 @@ footer p { margin: 0 0 4px; }
     if (wide.addEventListener) wide.addEventListener('change', syncFrame); else if (wide.addListener) wide.addListener(syncFrame);
   }
 
-  /* ---------- BibTeX copy ---------- */
-  var copyBtn = document.getElementById('copy-bib');
-  var bib = document.getElementById('bibtex');
-  var status = document.getElementById('copy-status');
-  if (copyBtn && bib) {
-    var reset = 0;
-    var done = function (ok) {
-      copyBtn.textContent = ok ? 'Copied' : 'Press Ctrl+C or ⌘C';
-      status.textContent = ok ? 'BibTeX copied to the clipboard.' : 'BibTeX selected; press Control C or Command C to copy.';
-      clearTimeout(reset);
-      reset = setTimeout(function () { copyBtn.textContent = 'Copy'; }, 2000);
+  /* ---------- Live demo: the Fig. 1 schedule, animated ---------- */
+  (function () {
+    var svg = document.getElementById('demo-svg');
+    if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var LAYOUT = {
+      wide: { W: 640, X: { C: 56, A: 250, R: 440, K: 590 }, num: 34, cw: 6.3 },
+      compact: { W: 400, X: { C: 26, A: 172, R: 290, K: 374 }, num: 14, cw: 5.7 }
     };
-    var fallback = function () {
-      var r = document.createRange();
-      r.selectNodeContents(bib);
-      var s = window.getSelection();
-      s.removeAllRanges();
-      s.addRange(r);
-      var ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-      done(ok);
+    var L, X, MID, BW = 4;
+    var setLayout = function () {
+      var next = svg.parentNode.clientWidth < 600 ? LAYOUT.compact : LAYOUT.wide;
+      if (next === L) return false;
+      L = next; X = L.X;
+      MID = { CA: (X.C + X.A) / 2, AR: (X.A + X.R) / 2, RK: (X.R + X.K) / 2 };
+      svg.setAttribute('viewBox', '0 0 ' + L.W + ' 428');
+      svg.setAttribute('class', L === LAYOUT.compact ? 'compact' : '');
+      return true;
     };
-    copyBtn.addEventListener('click', function () {
-      var text = bib.textContent;
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
-      } else {
-        fallback();
+    var y = function (i) { return 52 + i * 34; };
+    var c = '<tspan class="mi">c</tspan>';
+    var f = function (n, bad) { return '<tspan class="mono' + (bad ? ' bad' : '') + '">' + n + '</tspan>'; };
+    var STEPS = [
+      { f: 'C', t: 'A', m: 'CA', l: 'prompt A' },
+      { f: 'R', t: 'A', m: 'AR', l: 'A started; spawn ' + c },
+      { f: 'C', t: 'A', m: 'CA', l: 'cancel A' },
+      { f: 'R', t: 'A', m: 'AR', l: 'A interrupted' },
+      { f: 'A', t: 'C', m: 'CA', l: 'report A: unavailable' },
+      { f: 'C', t: 'A', m: 'CA', l: 'prompt B' },
+      { f: 'K', t: 'A', m: 'RK', l: c + ' started' },
+      { f: 'K', t: 'A', m: 'RK', l: c + ' edits ' + f('a.txt'), bad: true },
+      { f: 'R', t: 'A', m: 'AR', l: 'B edits ' + f('b.txt') },
+      { f: 'A', t: 'C', m: 'CA', l: 'report B: {' + f('b.txt') + ', ' + f('a.txt', true) + '}', bad: true,
+        ok: 'report B: {' + f('b.txt') + '}' }
+    ];
+    var BADGES = {
+      orig: { 8: ['credits a.txt to B', true] },
+      start: { 7: ['binds c to B', true], 8: ['credits a.txt to B', true] },
+      disp: { 2: ['binds c to A', false], 8: ['a.txt stays with A', false] }
+    };
+    var TEXT = {
+      0: 'This is the cancel schedule from Fig. 1 of the paper, on the Codex adapter. Press Play or Next to run it, and switch adapters to compare.',
+      1: 'The editor sends prompt A. The adapter starts tracking the files that A changes.',
+      2: { all: 'Codex starts A’s root turn, which spawns a child subagent c.',
+           orig: ' The original adapter records nothing about where c came from.',
+           start: ' The start-time patch will bind c when c’s own start event arrives.',
+           disp: ' The dispatch-time patch reads the spawn item and binds c to A now.' },
+      3: 'The user cancels A.',
+      4: 'A’s root turn is interrupted. The child c is not stopped and keeps working.',
+      5: 'The adapter answers A as cancelled, with no file-change report, and disposes of A’s per-request state.',
+      6: 'The editor sends prompt B. B is now the current request.',
+      7: { all: 'c’s start event reaches the adapter only now, after prompt B.',
+           orig: ' The original adapter still keeps no binding.',
+           start: ' The start-time patch binds c to the current request, B. But A dispatched c.',
+           disp: ' The dispatch-time patch already bound c to A at step 2.' },
+      8: { all: 'c edits a.txt as part of the work A asked for.',
+           orig: ' The original adapter credits the edit to whatever request is current: B.',
+           start: ' c is bound to B, so the edit goes to B.',
+           disp: ' c is bound to A, and A has already been answered, so the edit stays out of B’s report.' },
+      9: 'B’s own root turn edits b.txt.',
+      10: { all: '',
+            orig: 'The adapter answers B with the report {b.txt, a.txt}. The request id is right and the contents are wrong, and the editor has no way to tell.',
+            start: 'The adapter answers B with the report {b.txt, a.txt}. The request id is right and the contents are wrong, and the editor has no way to tell.',
+            disp: 'The adapter answers B with the report {b.txt}. It lists only B’s own work.' }
+    };
+    var VERDICT = {
+      orig: ['✗ Misattributed', 'B’s report lists a.txt, an edit made for A. Turnstile finds this in 581 of 956 Codex schedules on the original adapter.', true],
+      start: ['✗ Still misattributed', 'c’s start arrived after prompt B, so binding at the start event still goes by arrival time.', true],
+      disp: ['✓ Correct', 'B’s report lists only b.txt. The edit to a.txt is A’s work after A was answered, so it is left out. Neither adapter ever marks a report complete, so leaving an edit out is safe; crediting it to B is not.', false]
+    };
+    var mode = 'orig', k = 0, timer = 0, anim = 0, playing = false;
+    var btnPlay = document.getElementById('demo-play');
+    var btnBack = document.getElementById('demo-back');
+    var btnNext = document.getElementById('demo-next');
+    var btnReset = document.getElementById('demo-reset');
+    var elNo = document.getElementById('demo-stepno');
+    var elText = document.getElementById('demo-text');
+    var elState = document.getElementById('demo-state');
+    var elVerdict = document.getElementById('demo-verdict');
+
+    var el = function (tag, attrs, parent) {
+      var e = document.createElementNS(NS, tag);
+      for (var a in attrs) e.setAttribute(a, attrs[a]);
+      (parent || svg).appendChild(e);
+      return e;
+    };
+    var isBad = function (i) { return STEPS[i - 1].bad && mode !== 'disp'; };
+    var ends = function (s) {
+      var x1 = X[s.f], x2 = X[s.t];
+      if (s.f === 'A') x1 = x2 < x1 ? X.A - BW : X.A + BW;
+      if (s.t === 'A') x2 = x1 < X.A ? X.A - BW : X.A + BW;
+      return [x1, x2];
+    };
+    var text = function (v) { return typeof v === 'string' ? v : v.all + v[mode]; };
+
+    var draw = function () {
+      while (svg.lastChild && svg.lastChild.nodeName !== 'title') svg.removeChild(svg.lastChild);
+      var defs = el('defs', {});
+      [['ah', '#2b2b28'], ['ahbad', '#D03B3B']].forEach(function (d) {
+        var m = el('marker', { id: d[0], viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '7', markerHeight: '7', orient: 'auto-start-reverse' }, defs);
+        el('path', { d: 'M0 1 9 5 0 9z', fill: d[1] }, m);
+      });
+      if (k > 0) el('rect', { 'class': 'd-now', x: 4, y: y(k) - 17, width: L.W - 8, height: 34, rx: 6 });
+      [['C', 'Client'], ['A', 'Adapter'], ['R', 'Root thread'], ['K', 'Child c']].forEach(function (h) {
+        var t = el('text', { 'class': 'd-head', x: X[h[0]], y: 26 });
+        t.innerHTML = h[0] === 'K' ? 'Child <tspan class="mi" font-weight="400">c</tspan>' : h[1];
+        if (h[0] === 'K' && k < 2) {
+          el('line', { 'class': 'd-lane off', x1: X.K, y1: 38, x2: X.K, y2: 414 });
+        } else if (h[0] === 'K') {
+          el('line', { 'class': 'd-lane off', x1: X.K, y1: 38, x2: X.K, y2: y(2) });
+          el('line', { 'class': 'd-lane', x1: X.K, y1: y(2), x2: X.K, y2: 414 });
+        } else {
+          el('line', { 'class': 'd-lane', x1: X[h[0]], y1: 38, x2: X[h[0]], y2: 414 });
+        }
+      });
+      if (k >= 1) el('rect', { 'class': 'd-bar', x: X.A - BW, y: y(1), width: BW * 2, height: y(Math.min(k, 5)) - y(1) + 1 });
+      if (k >= 6) el('rect', { 'class': 'd-bar', x: X.A - BW, y: y(6), width: BW * 2, height: y(k) - y(6) + 1 });
+      if (k >= 1) el('text', { 'class': 'd-barlbl', x: X.A - BW - 5, y: y(1) + 18 }).textContent = 'A';
+      if (k >= 6) el('text', { 'class': 'd-barlbl', x: X.A - BW - 5, y: y(6) + 18 }).textContent = 'B';
+      for (var i = 1; i <= 10; i++) {
+        var s = STEPS[i - 1], e = ends(s);
+        var n = el('text', { 'class': 'd-num' + (i <= k ? ' on' : ''), x: L.num, y: y(i) + 4 });
+        n.textContent = i;
+        if (i > k) { el('line', { 'class': 'd-ghost', x1: e[0], y1: y(i), x2: e[1], y2: y(i) }); continue; }
+        var bad = isBad(i);
+        var ln = el('line', { 'class': 'd-msg' + (bad ? ' bad' : ''), x1: e[0], y1: y(i), x2: e[1], y2: y(i), 'marker-end': 'url(#' + (bad ? 'ahbad' : 'ah') + ')' });
+        var lb = el('text', { 'class': 'd-lbl', x: MID[s.m], y: y(i) - 7 });
+        lb.innerHTML = (i === 10 && mode === 'disp') ? s.ok : (s.bad && !bad ? s.l.replace(' bad', '') : s.l);
+        var bg = BADGES[mode][i], badge = null;
+        if (bg) {
+          var w = bg[0].length * L.cw + 18, bx = MID.CA - w / 2 + 6;
+          badge = el('g', { 'class': 'd-badge' + (bg[1] ? ' bad' : '') });
+          el('line', { x1: bx + w, y1: y(i), x2: X.A - BW - 1, y2: y(i) }, badge);
+          el('rect', { x: bx, y: y(i) - 10, width: w, height: 20, rx: 10 }, badge);
+          el('text', { x: bx + w / 2, y: y(i) + 4 }, badge).textContent = bg[0];
+        }
+        if (i === k && !reduce) animate(ln, lb, badge, e, y(i), bad);
       }
+    };
+
+    var animate = function (ln, lb, badge, e, yy, bad) {
+      var len = Math.abs(e[1] - e[0]);
+      ln.setAttribute('stroke-dasharray', len);
+      ln.setAttribute('stroke-dashoffset', len);
+      var head = ln.getAttribute('marker-end');
+      ln.removeAttribute('marker-end');
+      lb.style.opacity = 0;
+      if (badge) badge.style.opacity = 0;
+      var dot = el('circle', { 'class': 'd-dot' + (bad ? ' bad' : ''), cx: e[0], cy: yy, r: 4.5 });
+      var t0 = null, D = 650, token = ++anim, done = false;
+      var finish = function () {
+        if (done || token !== anim) return;
+        done = true;
+        ln.removeAttribute('stroke-dasharray');
+        ln.removeAttribute('stroke-dashoffset');
+        ln.setAttribute('marker-end', head);
+        lb.style.opacity = '';
+        if (dot.parentNode) dot.parentNode.removeChild(dot);
+        if (badge) badge.style.opacity = '';
+      };
+      var tick = function (ts) {
+        if (done || token !== anim) return;
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / D), q = 1 - Math.pow(1 - p, 3);
+        ln.setAttribute('stroke-dashoffset', len * (1 - q));
+        dot.setAttribute('cx', e[0] + (e[1] - e[0]) * q);
+        lb.style.opacity = Math.max(0, (p - 0.35) / 0.65);
+        if (badge) badge.style.opacity = Math.max(0, (p - 0.6) / 0.4);
+        if (p < 1) requestAnimationFrame(tick); else finish();
+      };
+      requestAnimationFrame(tick);
+      /* frames are paused in background tabs; never leave a step half drawn */
+      setTimeout(finish, D + 150);
+    };
+
+    var row = function (dt, dd, bad) {
+      return '<dt>' + dt + '</dt><dd' + (bad ? ' class="bad"' : '') + '>' + dd + '</dd>';
+    };
+    var panel = function () {
+      elNo.textContent = k === 0 ? 'Ready' : 'Step ' + k + ' of 10';
+      elText.textContent = text(TEXT[k]);
+      var cur = k === 0 ? 'none' : k < 5 ? 'A' : k === 5 ? 'none (A answered)' : k < 10 ? 'B' : 'none (B answered)';
+      var bind = k < 2 ? 'not spawned yet'
+        : mode === 'orig' ? 'nothing'
+        : mode === 'start' ? (k >= 7 ? 'B' : 'not yet')
+        : 'A';
+      var cred = k < 8 ? 'not yet' : mode === 'disp' ? 'A (already answered)' : 'B';
+      var rep = k < 10 ? 'not sent yet' : mode === 'disp' ? '{b.txt}' : '{b.txt, a.txt}';
+      elState.innerHTML = row('Current request', cur) +
+        row('Child c bound to', bind, mode === 'start' && k >= 7) +
+        row('Edit to a.txt goes to', cred, k >= 8 && mode !== 'disp') +
+        row('B’s report', rep, k >= 10 && mode !== 'disp');
+      if (k === 10) {
+        var v = VERDICT[mode];
+        elVerdict.className = 'verdict' + (v[2] ? ' bad' : '');
+        elVerdict.innerHTML = '<b>' + v[0] + '</b>' + v[1];
+        elVerdict.hidden = false;
+      } else {
+        elVerdict.hidden = true;
+      }
+      btnBack.disabled = k === 0;
+      btnNext.disabled = k === 10;
+      btnPlay.textContent = playing ? 'Pause' : k === 10 ? 'Replay' : 'Play';
+    };
+    var go = function (n) { anim++; k = Math.max(0, Math.min(10, n)); draw(); panel(); };
+    var stop = function () { playing = false; clearTimeout(timer); panel(); };
+    var loop = function () {
+      if (!playing) return;
+      if (k >= 10) { stop(); return; }
+      go(k + 1);
+      timer = setTimeout(loop, k === 10 ? 0 : 2300);
+    };
+    var play = function () {
+      if (k >= 10) go(0);
+      playing = true;
+      clearTimeout(timer);
+      timer = setTimeout(loop, k === 0 ? 150 : 0);
+      panel();
+    };
+    btnPlay.addEventListener('click', function () { if (playing) stop(); else play(); });
+    btnNext.addEventListener('click', function () { stop(); go(k + 1); });
+    btnBack.addEventListener('click', function () { stop(); go(k - 1); });
+    btnReset.addEventListener('click', function () { stop(); go(0); });
+    var modeBtns = document.querySelectorAll('#demo-modes button');
+    Array.prototype.forEach.call(modeBtns, function (b) {
+      b.addEventListener('click', function () {
+        mode = b.getAttribute('data-mode');
+        Array.prototype.forEach.call(modeBtns, function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        stop();
+        go(0);
+        if (!reduce) play();
+      });
     });
-  }
+    setLayout();
+    go(0);
+    var rz = 0;
+    window.addEventListener('resize', function () {
+      clearTimeout(rz);
+      rz = setTimeout(function () { if (setLayout()) { anim++; draw(); } }, 120);
+    });
+    if (!reduce && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { io.disconnect(); if (k === 0 && !playing) play(); }
+      }, { threshold: 0.5 });
+      io.observe(svg);
+    }
+  })();
 })();
 </script>
 </body>
