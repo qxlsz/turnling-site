@@ -381,67 +381,31 @@ footer p { margin: 0 0 4px; }
 }
 .btn.btn-off { background: #fff; color: var(--muted, #6b6a64); border: 1px dashed #c9c7bf; cursor: default; }
 
-/* ---------- live demo ---------- */
-.demo { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; margin: 22px 0 10px; }
-.demo-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 18px; }
-.demo-stage { border: 1px solid var(--border); border-radius: var(--radius); background: #fff; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.demo-stage svg { display: block; width: 100%; height: auto; }
-.demo-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.ctrls { display: flex; flex-wrap: wrap; gap: 6px; }
-.ctrl { display: inline-flex; align-items: center; gap: 6px; font: inherit; font-size: 0.88rem; font-weight: 600; color: var(--ink); background: #fff; border: 1px solid var(--hair); border-radius: 999px; padding: 6px 14px; cursor: pointer; line-height: 1.3; }
-.ctrl:hover { background: var(--soft); }
-.ctrl:disabled { opacity: 0.4; cursor: default; background: #fff; }
-.ctrl.primary { background: #1f1f1d; color: #fff; border-color: #1f1f1d; min-width: 92px; justify-content: center; }
-.ctrl.primary:hover { background: #000; }
-.ctrl svg { width: 12px; height: 12px; flex: none; }
-.narr { border: 1px solid var(--border); border-radius: var(--radius); background: var(--soft); padding: 12px 16px 14px; min-height: 172px; }
-.narr p { margin: 0; font-size: 0.95rem; line-height: 1.55; color: var(--ink-2); }
-.dstate { margin: 0; border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 14px; font-size: 0.88rem; }
-.dstate dt { color: var(--muted); }
-.dstate dd { margin: 0; font-weight: 600; }
-.dstate .bad { color: #b42b2b; }
-.verdict { border-radius: var(--radius); padding: 10px 16px; font-size: 0.92rem; line-height: 1.5; border: 1px solid var(--border); background: var(--soft); }
-.verdict[hidden] { display: none; }
-.verdict.bad { background: var(--mis-soft); border-color: #efc6c6; }
-.verdict b { display: block; }
-.d-lane { stroke: #d3d1c9; stroke-width: 1; }
-.d-lane.off { stroke-dasharray: 3 4; stroke: #e3e1da; }
-.d-head { font-family: var(--sans); font-size: 13px; font-weight: 650; fill: #1c1c1a; text-anchor: middle; }
-.d-num { font-family: var(--sans); font-size: 11px; fill: #b9b7ae; text-anchor: end; }
-.d-num.on { fill: #67655f; }
-.d-ghost { stroke: #eeede8; stroke-width: 1.3; }
-.d-msg { stroke: #2b2b28; stroke-width: 1.3; fill: none; }
-.d-msg.bad { stroke: var(--mis); stroke-width: 2.2; }
-.d-lbl { font-family: var(--sans); font-size: 12.5px; fill: #2b2b28; text-anchor: middle; }
-.d-lbl .mi { font-family: Georgia, "Times New Roman", serif; font-style: italic; }
-.d-lbl .mono { font-family: var(--mono); font-size: 11.5px; }
-.d-lbl .bad { fill: var(--mis); font-weight: 700; }
-.d-bar { fill: #dedcd4; }
-.d-barlbl { font-family: var(--sans); font-size: 11px; font-weight: 700; fill: #67655f; text-anchor: end; }
-.d-dot { fill: #1f1f1d; }
-.d-dot.bad { fill: var(--mis); }
-.d-badge rect { fill: #1f1f1d; }
-.d-badge.bad rect { fill: var(--mis); }
-.d-badge text { font-family: var(--sans); font-size: 11.5px; font-weight: 600; fill: #fff; text-anchor: middle; }
-.d-badge line { stroke: #1f1f1d; stroke-width: 1; stroke-dasharray: 2 2; }
-.d-badge.bad line { stroke: var(--mis); }
-.d-now { fill: #f3f2ed; }
-svg.compact .d-head { font-size: 11.5px; }
-svg.compact .d-num { font-size: 10px; }
-svg.compact .d-lbl { font-size: 11px; }
-svg.compact .d-lbl .mono { font-size: 10px; }
-svg.compact .d-badge text { font-size: 10.5px; }
-@media (max-width: 900px) {
-  .demo { grid-template-columns: 1fr; }
-  .narr { min-height: 0; }
-}
+/* ---------- how it works: animated chapters ---------- */
+.hw { margin: 22px 0 10px; }
+.hw-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.hw-tab { font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--ink-2); background: #fff; border: 1px solid var(--hair); border-radius: 999px; padding: 7px 16px; cursor: pointer; line-height: 1.3; }
+.hw-tab:hover { background: var(--soft); }
+.hw-tab[aria-selected="true"] { background: #1f1f1d; color: #fff; border-color: #1f1f1d; }
+.hw-tab .n { opacity: 0.6; margin-right: 6px; font-variant-numeric: tabular-nums; }
+.hw-stage { position: relative; border: 1px solid var(--border); border-radius: 14px; background: #fff; overflow: hidden; }
+.hw-stage svg { display: block; width: 100%; height: auto; }
+.hw-bar { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.hw-play { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 104px; font: inherit; font-size: 0.9rem; font-weight: 600; color: #fff; background: #1f1f1d; border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.hw-play:hover { background: #000; }
+.hw-play svg { width: 12px; height: 12px; }
+.hw-scrub { flex: 1 1 auto; min-width: 0; accent-color: #1f1f1d; height: 24px; cursor: pointer; }
+.hw-count { flex: none; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hw-cap { margin: 12px 0 0; min-height: 3.4em; font-size: 1.04rem; line-height: 1.6; color: var(--ink); border-left: 3px solid var(--ink); padding: 2px 0 2px 14px; }
+.hw-t, .hw-h, .hw-s { font-family: var(--sans); }
+.hw-h { font-size: 17px; font-weight: 700; fill: #1c1c1a; }
+.hw-s { font-size: 13.5px; }
+.hw-mono { font-family: var(--mono); }
+.hw-mi { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 400; }
 @media (max-width: 640px) {
-  .demo-top { flex-direction: column; align-items: stretch; }
-  #demo-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 14px; }
-  #demo-modes button { font-size: 0.8rem; padding: 6px 6px; border-radius: 11px; }
-  .ctrls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .ctrl { justify-content: center; padding: 6px 6px; font-size: 0.84rem; }
-  .ctrl.primary { min-width: 0; }
+  .hw-tab { font-size: 0.8rem; padding: 6px 11px; }
+  .hw-cap { font-size: 0.97rem; min-height: 5em; }
+  .hw-count { display: none; }
 }
 </style>
 </head>
@@ -493,38 +457,27 @@ svg.compact .d-badge text { font-size: 10.5px; }
 
 <section id="demo">
   <div class="container wide">
-    <span class="kicker">Live demo</span>
-    <h2>Watch an edit land in the wrong report</h2>
-    <p class="lead">Request A starts a subagent and is then cancelled. The subagent keeps working, and its edit reaches the adapter while request B is running. Play the schedule from Fig. 1 of the paper and switch adapters to see who gets the edit.</p>
-    <div class="demo-top">
-      <div class="seg-toggle" role="group" aria-label="Adapter to watch" id="demo-modes">
-        <button type="button" data-mode="orig" aria-pressed="true">Original adapter</button>
-        <button type="button" data-mode="start" aria-pressed="false">Start-time patch</button>
-        <button type="button" data-mode="disp" aria-pressed="false">Dispatch-time patch</button>
+    <span class="kicker">How it works</span>
+    <h2>The bug, the checker and the fix, in motion</h2>
+    <p class="lead">Four short animations. The first two show how an edit lands in the wrong report and how Turnstile checks the orders in which it can happen. The last two show the fix and why no adapter can always be exact on the Codex 0.160.1 wire.</p>
+    <div class="hw">
+      <div class="hw-tabs" role="tablist" aria-label="Chapters" id="hw-tabs">
+        <button type="button" class="hw-tab" role="tab" aria-selected="true" aria-controls="hw-stage" data-ch="0"><span class="n">1</span>The bug</button>
+        <button type="button" class="hw-tab" role="tab" aria-selected="false" aria-controls="hw-stage" data-ch="1"><span class="n">2</span>How Turnstile finds it</button>
+        <button type="button" class="hw-tab" role="tab" aria-selected="false" aria-controls="hw-stage" data-ch="2"><span class="n">3</span>The fix</button>
+        <button type="button" class="hw-tab" role="tab" aria-selected="false" aria-controls="hw-stage" data-ch="3"><span class="n">4</span>Why it is hard</button>
       </div>
-      <div class="ctrls">
-        <button type="button" class="ctrl" id="demo-back" aria-label="Previous step"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M8 2 4 6l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Back</button>
-        <button type="button" class="ctrl primary" id="demo-play">Play</button>
-        <button type="button" class="ctrl" id="demo-next" aria-label="Next step">Next<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button type="button" class="ctrl" id="demo-reset">Restart</button>
+      <div class="hw-stage" id="hw-stage" role="tabpanel">
+        <svg id="hw-svg" viewBox="0 0 960 510" role="img" aria-labelledby="hw-svg-t"><title id="hw-svg-t">Animation; the caption below describes each moment.</title></svg>
       </div>
+      <div class="hw-bar">
+        <button type="button" class="hw-play" id="hw-play">Play</button>
+        <input type="range" class="hw-scrub" id="hw-scrub" min="0" max="1000" value="0" aria-label="Position in this chapter">
+        <span class="hw-count" id="hw-count">1 of 4</span>
+      </div>
+      <p class="hw-cap" id="hw-cap" aria-live="polite"></p>
     </div>
-    <div class="demo">
-      <div class="demo-stage">
-        <svg id="demo-svg" viewBox="0 0 640 428" role="img" aria-labelledby="demo-svg-t">
-          <title id="demo-svg-t">Animated sequence diagram of the Fig. 1 cancel schedule: client, adapter, root thread and child c, ten steps.</title>
-        </svg>
-      </div>
-      <div class="demo-side">
-        <div class="narr">
-          <span class="label" id="demo-stepno">Ready</span>
-          <p id="demo-text" aria-live="polite"></p>
-        </div>
-        <dl class="dstate" id="demo-state"></dl>
-        <div class="verdict" id="demo-verdict" hidden></div>
-      </div>
-    </div>
-    <p class="note">The demo replays one schedule by hand; it does not run an adapter. Turnstile checks all legal orders of scenarios like this one, and the results below come from those runs.</p>
+    <p class="note">The animations are drawn by hand from the paper’s Fig. 1, Table I and Theorem 1; they do not run an adapter. Each chapter plays on into the next, and you can drag the bar to any moment.</p>
 
     <h3>The work in three steps</h3>
     <div class="cards">
@@ -1177,252 +1130,570 @@ svg.compact .d-badge text { font-size: 10.5px; }
     if (wide.addEventListener) wide.addEventListener('change', syncFrame); else if (wide.addListener) wide.addListener(syncFrame);
   }
 
-  /* ---------- Live demo: the Fig. 1 schedule, animated ---------- */
+  /* ---------- How it works: four animated chapters ---------- */
   (function () {
-    var svg = document.getElementById('demo-svg');
+    var svg = document.getElementById('hw-svg');
     if (!svg) return;
     var NS = 'http://www.w3.org/2000/svg';
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var LAYOUT = {
-      wide: { W: 640, X: { C: 56, A: 250, R: 440, K: 590 }, num: 34, cw: 6.3 },
-      compact: { W: 400, X: { C: 26, A: 172, R: 290, K: 374 }, num: 14, cw: 5.7 }
-    };
-    var L, X, MID, BW = 4;
-    var setLayout = function () {
-      var next = svg.parentNode.clientWidth < 600 ? LAYOUT.compact : LAYOUT.wide;
-      if (next === L) return false;
-      L = next; X = L.X;
-      MID = { CA: (X.C + X.A) / 2, AR: (X.A + X.R) / 2, RK: (X.R + X.K) / 2 };
-      svg.setAttribute('viewBox', '0 0 ' + L.W + ' 428');
-      svg.setAttribute('class', L === LAYOUT.compact ? 'compact' : '');
-      return true;
-    };
-    var y = function (i) { return 52 + i * 34; };
-    var c = '<tspan class="mi">c</tspan>';
-    var f = function (n, bad) { return '<tspan class="mono' + (bad ? ' bad' : '') + '">' + n + '</tspan>'; };
-    var STEPS = [
-      { f: 'C', t: 'A', m: 'CA', l: 'prompt A' },
-      { f: 'R', t: 'A', m: 'AR', l: 'A started; spawn ' + c },
-      { f: 'C', t: 'A', m: 'CA', l: 'cancel A' },
-      { f: 'R', t: 'A', m: 'AR', l: 'A interrupted' },
-      { f: 'A', t: 'C', m: 'CA', l: 'report A: unavailable' },
-      { f: 'C', t: 'A', m: 'CA', l: 'prompt B' },
-      { f: 'K', t: 'A', m: 'RK', l: c + ' started' },
-      { f: 'K', t: 'A', m: 'RK', l: c + ' edits ' + f('a.txt'), bad: true },
-      { f: 'R', t: 'A', m: 'AR', l: 'B edits ' + f('b.txt') },
-      { f: 'A', t: 'C', m: 'CA', l: 'report B: {' + f('b.txt') + ', ' + f('a.txt', true) + '}', bad: true,
-        ok: 'report B: {' + f('b.txt') + '}' }
-    ];
-    var BADGES = {
-      orig: { 8: ['credits a.txt to B', true] },
-      start: { 7: ['binds c to B', true], 8: ['credits a.txt to B', true] },
-      disp: { 2: ['binds c to A', false], 8: ['a.txt stays with A', false] }
-    };
-    var TEXT = {
-      0: 'This is the cancel schedule from Fig. 1 of the paper, on the Codex adapter. Press Play or Next to run it, and switch adapters to compare.',
-      1: 'The editor sends prompt A. The adapter starts tracking the files that A changes.',
-      2: { all: 'Codex starts A’s root turn, which spawns a child subagent c.',
-           orig: ' The original adapter records nothing about where c came from.',
-           start: ' The start-time patch will bind c when c’s own start event arrives.',
-           disp: ' The dispatch-time patch reads the spawn item and binds c to A now.' },
-      3: 'The user cancels A.',
-      4: 'A’s root turn is interrupted. The child c is not stopped and keeps working.',
-      5: 'The adapter answers A as cancelled, with no file-change report, and disposes of A’s per-request state.',
-      6: 'The editor sends prompt B. B is now the current request.',
-      7: { all: 'c’s start event reaches the adapter only now, after prompt B.',
-           orig: ' The original adapter still keeps no binding.',
-           start: ' The start-time patch binds c to the current request, B. But A dispatched c.',
-           disp: ' The dispatch-time patch already bound c to A at step 2.' },
-      8: { all: 'c edits a.txt as part of the work A asked for.',
-           orig: ' The original adapter credits the edit to whatever request is current: B.',
-           start: ' c is bound to B, so the edit goes to B.',
-           disp: ' c is bound to A, and A has already been answered, so the edit stays out of B’s report.' },
-      9: 'B’s own root turn edits b.txt.',
-      10: { all: '',
-            orig: 'The adapter answers B with the report {b.txt, a.txt}. The request id is right and the contents are wrong, and the editor has no way to tell.',
-            start: 'The adapter answers B with the report {b.txt, a.txt}. The request id is right and the contents are wrong, and the editor has no way to tell.',
-            disp: 'The adapter answers B with the report {b.txt}. It lists only B’s own work.' }
-    };
-    var VERDICT = {
-      orig: ['✗ Misattributed', 'B’s report lists a.txt, an edit made for A. Turnstile finds this in 581 of 956 Codex schedules on the original adapter.', true],
-      start: ['✗ Still misattributed', 'c’s start arrived after prompt B, so binding at the start event still goes by arrival time.', true],
-      disp: ['✓ Correct', 'B’s report lists only b.txt. The edit to a.txt is A’s work after A was answered, so it is left out. Neither adapter ever marks a report complete, so leaving an edit out is safe; crediting it to B is not.', false]
-    };
-    var mode = 'orig', k = 0, timer = 0, anim = 0, playing = false;
-    var btnPlay = document.getElementById('demo-play');
-    var btnBack = document.getElementById('demo-back');
-    var btnNext = document.getElementById('demo-next');
-    var btnReset = document.getElementById('demo-reset');
-    var elNo = document.getElementById('demo-stepno');
-    var elText = document.getElementById('demo-text');
-    var elState = document.getElementById('demo-state');
-    var elVerdict = document.getElementById('demo-verdict');
+    var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var C = { A: '#2F5FB3', B: '#13806F', mis: '#D03B3B', ink: '#1f1f1d', ink2: '#45443f', muted: '#67655f',
+              line: '#cfccc3', border: '#e3e1da', soft: '#f6f5f1', ok: '#DCDBD4' };
 
-    var el = function (tag, attrs, parent) {
+    /* ---- drawing helpers ---- */
+    var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+    var ease = function (x) { x = clamp(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+    var seg = function (t, a, b) { return ease((t - a) / (b - a)); };
+    var mix = function (a, b, p) { return a + (b - a) * p; };
+    var mk = function (tag, attrs, parent, text) {
       var e = document.createElementNS(NS, tag);
-      for (var a in attrs) e.setAttribute(a, attrs[a]);
+      if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+      if (text != null) e.textContent = text;
       (parent || svg).appendChild(e);
       return e;
     };
-    var isBad = function (i) { return STEPS[i - 1].bad && mode !== 'disp'; };
-    var ends = function (s) {
-      var x1 = X[s.f], x2 = X[s.t];
-      if (s.f === 'A') x1 = x2 < x1 ? X.A - BW : X.A + BW;
-      if (s.t === 'A') x2 = x1 < X.A ? X.A - BW : X.A + BW;
-      return [x1, x2];
+    /* keyframes: [time, x, y, opacity, scale]; eased between keys, held outside them */
+    var at = function (t, keys) {
+      var k0 = keys[0], kn = keys[keys.length - 1];
+      if (t <= k0[0]) return k0;
+      if (t >= kn[0]) return kn;
+      for (var i = 1; i < keys.length; i++) {
+        if (t < keys[i][0]) {
+          var a = keys[i - 1], b = keys[i], p = ease((t - a[0]) / (b[0] - a[0]));
+          var sa = a[4] == null ? 1 : a[4], sb = b[4] == null ? 1 : b[4];
+          return [t, mix(a[1], b[1], p), mix(a[2], b[2], p), mix(a[3], b[3], p), mix(sa, sb, p)];
+        }
+      }
+      return kn;
     };
-    var text = function (v) { return typeof v === 'string' ? v : v.all + v[mode]; };
+    var put = function (g, s) {
+      var sc = s[4] == null ? 1 : s[4];
+      g.setAttribute('transform', 'translate(' + s[1].toFixed(1) + ' ' + s[2].toFixed(1) + ')' + (sc !== 1 ? ' scale(' + sc.toFixed(3) + ')' : ''));
+      g.setAttribute('opacity', clamp(s[3]).toFixed(3));
+    };
+    var fade = function (e, o) { e.setAttribute('opacity', clamp(o).toFixed(3)); };
+    var move = function (g, x, y, o, s) { put(g, [0, x, y, o, s]); };
+    var measure = function (tx, size) {
+      var w = 0;
+      try { w = tx.getComputedTextLength(); } catch (e) { w = 0; }
+      return w || tx.textContent.length * size * 0.56;
+    };
+    /* a rounded label centred on its group's origin */
+    var pill = function (parent, text, o) {
+      o = o || {};
+      var size = o.size || 15;
+      var g = mk('g', { opacity: 0 }, parent);
+      var r = mk('rect', { fill: o.fill || '#fff', stroke: o.stroke || 'none', 'stroke-width': o.sw || 1.6 }, g);
+      if (o.dash) r.setAttribute('stroke-dasharray', o.dash);
+      var tx = mk('text', { 'class': 'hw-t' + (o.mono ? ' hw-mono' : ''), 'text-anchor': 'middle', y: (size * 0.36).toFixed(1),
+                            fill: o.color || C.ink, 'font-size': size, 'font-weight': o.weight || 600 }, g);
+      if (o.html) tx.innerHTML = text; else tx.textContent = text;
+      var h = o.h || size + 19;
+      var w = o.w || Math.max(o.min || 0, measure(tx, size) + (o.pad || 30));
+      r.setAttribute('x', (-w / 2).toFixed(1)); r.setAttribute('y', (-h / 2).toFixed(1));
+      r.setAttribute('width', w.toFixed(1)); r.setAttribute('height', h);
+      r.setAttribute('rx', o.r != null ? o.r : h / 2);
+      g.r = r; g.tx = tx; g.w = w; g.h = h;
+      return g;
+    };
+    var box = function (b, title) {
+      mk('rect', { x: b.x, y: b.y, width: b.w, height: b.h, rx: 16, fill: C.soft, stroke: C.border });
+      mk('text', { 'class': 'hw-h', x: b.x + 18, y: b.y + 31 }, svg, title);
+    };
+    var setText = function (e, s) { if (e.textContent !== s) e.textContent = s; };
 
-    var draw = function () {
+    /* ---- geometry: one layout for wide stages, one for phones ---- */
+    var GEO = {
+      wide: {
+        W: 960, H: 510,
+        editor: { x: 20, y: 56, w: 200, h: 420 }, adapter: { x: 320, y: 56, w: 320, h: 420 }, codex: { x: 740, y: 56, w: 200, h: 420 },
+        pOrigin: [120, 118], slot: [560, 114], slotLabel: [340, 119, 'start'],
+        trayA: [340, 152], trayB: [340, 312], trayW: 280, trayH: 132,
+        root: [840, 186], child: [840, 356], rootLabel: -40, entry: [630, 298], childNote: [840, 442], tag: [36, -30],
+        landA: [120, 262], landB: [120, 372], verdict: [120, 418],
+        cards: { x: 40, w: 250, h: 40, ys: [104, 150, 196, 242], title: [40, 86] }, repTo: [325, 310],
+        runner: { x: 40, y: 330, w: 160, h: 58 }, oracle: { x: 220, y: 330, w: 210, h: 150 },
+        grid: { x: 476, y: 106, cols: 42, pitch: 11.2, cell: 9.4, counter: [476, 82], foot: [476, 496], footLines: 1 },
+        thm: { wide: true, labelX: 24, rows: { E: 136, S: 266, F: 396 }, x0: 216, dx: 96, cw: 88, sw: 88, h: 54 }
+      },
+      tall: {
+        W: 540, H: 830,
+        editor: { x: 20, y: 20, w: 500, h: 200 }, adapter: { x: 20, y: 256, w: 500, h: 336 }, codex: { x: 20, y: 628, w: 500, h: 190 },
+        pOrigin: [420, 120], slot: [420, 336], slotLabel: [420, 304, 'middle'],
+        trayA: [36, 304], trayB: [36, 448], trayW: 300, trayH: 132,
+        root: [420, 712], child: [170, 712], rootLabel: 50, entry: [420, 512], childNote: [300, 712], tag: [36, -30],
+        landA: [150, 96], landB: [150, 150], verdict: [150, 194],
+        cards: { x: 30, w: 250, h: 38, ys: [86, 132, 178, 224], title: [30, 62] },
+        runner: { x: 300, y: 86, w: 210, h: 52 }, oracle: { x: 300, y: 152, w: 210, h: 130 }, repTo: [405, 304],
+        grid: { x: 30, y: 356, cols: 40, pitch: 12, cell: 10, counter: [30, 340], foot: [30, 776], footLines: 2 },
+        thm: { wide: false, cols: { E: 95, S: 270, F: 445 }, y0: 150, dy: 64, cw: 136, sw: 156, h: 52 }
+      }
+    };
+
+    /* ---- chapters 1 and 3: editor, adapter, Codex ---- */
+    var story = function (G, fix) {
+      var d = fix ? 2.6 : 0;
+      var E = 10.6 + d, B = E + 3.2, R = B + 1.5;
+      box(G.editor, 'Editor'); box(G.adapter, 'Adapter'); box(G.codex, 'Codex');
+      mk('text', { 'class': 'hw-s', x: G.slotLabel[0], y: G.slotLabel[1], 'text-anchor': G.slotLabel[2], fill: C.muted }, svg, 'Current request');
+      mk('rect', { x: G.slot[0] - 64, y: G.slot[1] - 20, width: 128, height: 40, rx: 20, fill: 'none', stroke: C.line, 'stroke-dasharray': '4 4' });
+      var tray = function (pos, who) {
+        var g = mk('g', { transform: 'translate(' + pos[0] + ' ' + pos[1] + ')', opacity: 0 });
+        g.r = mk('rect', { width: G.trayW, height: G.trayH, rx: 12, fill: '#fff', stroke: C[who], 'stroke-width': 1.6 }, g);
+        g.t1 = mk('text', { 'class': 'hw-s', x: 16, y: 28, 'font-weight': 700, fill: C[who] }, g, who + '’s report');
+        g.t2 = mk('text', { 'class': 'hw-s', x: 16, y: G.trayH - 14, fill: C.muted }, g, 'open');
+        return g;
+      };
+      var trA = tray(G.trayA, 'A'), trB = tray(G.trayB, 'B');
+      var slotIn = function (pos, i) { return [pos[0] + 60 + i * 96, pos[1] + 66]; };
+      var ring = mk('rect', { x: G.slot[0] - 74, y: G.slot[1] - 30, width: 148, height: 60, rx: 30, fill: 'none', stroke: C.ink, 'stroke-width': 2.2, opacity: 0 });
+      var query = mk('line', { x1: G.entry[0], y1: G.entry[1], x2: G.slot[0], y2: G.slot[1] + 22, stroke: C.ink, 'stroke-width': 1.6, 'stroke-dasharray': '4 4', opacity: 0 });
+      var queryTx = mk('text', { 'class': 'hw-s', 'font-weight': 700, x: G.entry[0] - 14, y: G.entry[1] - 24, 'text-anchor': 'end', fill: C.ink, stroke: '#fff', 'stroke-width': 4, 'paint-order': 'stroke', opacity: 0 }, svg, 'current? B');
+
+      var link = mk('line', { stroke: C.line, 'stroke-width': 2.2 });
+      var root = mk('g', { transform: 'translate(' + G.root[0] + ' ' + G.root[1] + ')' });
+      var rc = mk('circle', { r: 27, fill: '#fff', stroke: C.line, 'stroke-width': 2 }, root);
+      var rt = mk('text', { 'class': 'hw-t', 'text-anchor': 'middle', y: 6.5, 'font-size': 18, 'font-weight': 700, fill: '#fff' }, root, '');
+      var rx = mk('path', { d: 'M-9 -9 9 9 M9 -9 -9 9', stroke: C.ink, 'stroke-width': 2.6, 'stroke-linecap': 'round', opacity: 0 }, root);
+      var rl = mk('text', { 'class': 'hw-s', 'text-anchor': 'middle', y: G.rootLabel, fill: C.muted }, root, 'root turn');
+      var child = mk('g', { opacity: 0 });
+      var spin = mk('circle', { r: 32, fill: 'none', stroke: C.ink2, 'stroke-width': 2.4, 'stroke-dasharray': '46 155', 'stroke-linecap': 'round' }, child);
+      mk('circle', { r: 24, fill: '#fff', stroke: C.ink, 'stroke-width': 2 }, child);
+      mk('text', { 'class': 'hw-t hw-mi', 'text-anchor': 'middle', y: 7, 'font-size': 22, fill: C.ink }, child, 'c');
+      mk('text', { 'class': 'hw-s', 'text-anchor': 'middle', y: 54, fill: C.muted }, child, 'subagent');
+      var note = mk('text', { 'class': 'hw-s', 'text-anchor': 'middle', x: G.childNote[0], y: G.childNote[1], 'font-weight': 700, fill: C.ink2, opacity: 0 }, svg, 'still working');
+
+      var pA = pill(svg, 'request A', { fill: C.A, color: '#fff', min: 112 });
+      var pA2 = pill(svg, 'request A', { fill: C.A, color: '#fff', min: 112 });
+      var pB = pill(svg, 'request B', { fill: C.B, color: '#fff', min: 112 });
+      var pB2 = pill(svg, 'request B', { fill: C.B, color: '#fff', min: 112 });
+      var spawn = pill(svg, 'spawn c', { stroke: C.ink2, color: C.ink2, size: 14 });
+      var cancel = pill(svg, 'cancel A', { fill: C.ink, color: '#fff', size: 14 });
+      var cancel2 = pill(svg, 'cancel A', { fill: C.ink, color: '#fff', size: 14 });
+      var envA = pill(svg, 'A: cancelled, no report', { stroke: C.A, color: C.ink, size: 13.5, pad: 22 });
+      var envB = pill(svg, fix ? 'B: <tspan class="hw-mono">b.txt</tspan>'
+                               : 'B: <tspan class="hw-mono">b.txt</tspan>, <tspan class="hw-mono" fill="' + C.mis + '" font-weight="700">a.txt</tspan>',
+                    { stroke: C.B, color: C.ink, size: 14, html: true, pad: 24 });
+      var verdict = pill(svg, fix ? '✓ only B’s own work' : '✗ a.txt was A’s work', fix ? { fill: C.ink, color: '#fff', size: 13 } : { fill: C.mis, color: '#fff', size: 13 });
+      var aTxt = pill(svg, 'a.txt', { mono: true, stroke: fix ? C.A : C.ink, color: C.ink, w: 88, h: 36, r: 8, sw: 2 });
+      var aLbl = mk('text', { 'class': 'hw-s', 'text-anchor': 'middle', 'font-weight': 700, fill: C.muted, opacity: 0 }, svg, 'left out');
+      var bTxt = pill(svg, 'b.txt', { mono: true, stroke: C.B, color: C.ink, w: 88, h: 36, r: 8, sw: 2 });
+      var tag = pill(svg, 'A', { fill: C.A, color: '#fff', size: 13, w: 30, h: 24, r: 6 });
+      var ghost = pill(svg, 'B?', { fill: '#fff', stroke: C.mis, color: C.mis, size: 13, w: 40, h: 24, r: 6, dash: '3 3' });
+      var ghostX = mk('path', { stroke: C.mis, 'stroke-width': 2.2, 'stroke-linecap': 'round', opacity: 0 });
+      var cStart = pill(svg, 'c started', { stroke: C.ink2, color: C.ink2, size: 14 });
+
+      var P = G.pOrigin, S = G.slot, Rt = G.root, Ch = G.child, En = G.entry;
+      var tagPos = [Ch[0] + G.tag[0], Ch[1] + G.tag[1]];
+      var aDest = fix ? slotIn(G.trayA, 0) : slotIn(G.trayB, 0);
+      var bDest = slotIn(G.trayB, fix ? 0 : 1);
+      var trayCtr = function (pos) { return [pos[0] + G.trayW / 2, pos[1] + G.trayH / 2]; };
+
+      var caps = fix ? [
+        [0, 'Same schedule, now with the dispatch-time patch. Request A arrives and becomes the current request.'],
+        [2.8, 'A’s turn starts the subagent c. The spawn item names A’s turn, so the patch records that c works for A.'],
+        [4.8, 'The user cancels A. Codex stops A’s root turn, but c keeps working.'],
+        [6.8, 'The adapter answers A as cancelled, with no file report.'],
+        [8.6, 'Request B arrives and becomes the current request.'],
+        [10.6, 'c’s first event reaches the adapter only now, after B’s prompt. The start-time patch binds c at this moment, to B, which is why it fails here. The dispatch-time patch keeps A.'],
+        [E, 'c edits a.txt. The edit follows c’s binding, A, not the current request.'],
+        [E + 1.6, 'A was already answered, so a.txt is left out rather than given to B. That is allowed: neither adapter ever claims a report is complete.'],
+        [B, 'B’s own turn edits b.txt.'],
+        [R, 'B’s report lists only b.txt, B’s own work.']
+      ] : [
+        [0, 'Request A arrives. The adapter makes A the current request and opens a report for it.'],
+        [2.8, 'A’s turn starts a subagent, c. Codex says so in a spawn item, but the original adapter does not use it.'],
+        [4.8, 'The user cancels A. Codex stops A’s root turn, but c keeps working.'],
+        [6.8, 'The adapter answers A as cancelled, with no file report, and drops A’s state.'],
+        [8.6, 'Request B arrives and becomes the current request.'],
+        [E, 'c finishes an edit to a.txt, work it was doing for A. The adapter only asks which request is current: B.'],
+        [E + 2.0, 'So a.txt goes into B’s report.'],
+        [B, 'B’s own turn edits b.txt.'],
+        [R, 'B’s report says B changed b.txt and a.txt. The request id is right, the files are wrong, and the editor cannot tell.']
+      ];
+
+      var update = function (t) {
+        // requests and cancel
+        put(pA, at(t, [[0.3, P[0], P[1], 0], [0.5, P[0], P[1], 1], [1.4, S[0], S[1], 1], [7.2, S[0], S[1], 1], [7.6, S[0], S[1], 0]]));
+        put(pA2, at(t, [[1.6, S[0], S[1], 0], [1.7, S[0], S[1], 1], [2.4, Rt[0], Rt[1], 1], [2.6, Rt[0], Rt[1], 0]]));
+        put(cancel, at(t, [[4.8, P[0], P[1], 0], [4.9, P[0], P[1], 1], [5.5, S[0], S[1], 1], [5.6, S[0], S[1], 0]]));
+        put(cancel2, at(t, [[5.5, S[0], S[1], 0], [5.6, S[0], S[1], 1], [6.2, Rt[0], Rt[1], 1], [6.4, Rt[0], Rt[1], 0]]));
+        put(pB, at(t, [[8.6, P[0], P[1], 0], [8.8, P[0], P[1], 1], [9.7, S[0], S[1], 1]]));
+        put(pB2, at(t, [[9.9, S[0], S[1], 0], [10.0, S[0], S[1], 1], [10.5, Rt[0], Rt[1], 1], [10.7, Rt[0], Rt[1], 0]]));
+        // trays
+        fade(trA, seg(t, 1.3, 1.7)); fade(trB, seg(t, 9.7, 10.1));
+        var aDone = t >= 7.0;
+        trA.r.setAttribute('stroke-dasharray', aDone ? '5 5' : '');
+        trA.r.setAttribute('stroke', aDone ? C.line : C.A);
+        trA.r.setAttribute('fill', aDone ? C.soft : '#fff');
+        setText(trA.t2, !aDone ? 'open' : fix && t >= E + 2.2 ? 'A already answered: left out' : 'answered, no file report');
+        setText(trB.t2, t >= R + 0.2 ? 'sent' : 'open');
+        // root turn: A, stopped, then B
+        var who = t >= 10.5 ? 'B' : t >= 2.4 ? 'A' : '';
+        var stopped = t >= 6.2 && t < 10.5;
+        rc.setAttribute('fill', who && !stopped ? C[who] : '#fff');
+        rc.setAttribute('stroke', who ? (stopped ? C.ink : C[who]) : C.line);
+        setText(rt, stopped ? '' : who);
+        fade(rx, stopped ? 1 : 0);
+        setText(rl, stopped ? 'A stopped' : 'root turn');
+        // subagent
+        var g = seg(t, 2.8, 3.5);
+        link.setAttribute('x1', Rt[0]); link.setAttribute('y1', Rt[1]);
+        link.setAttribute('x2', mix(Rt[0], Ch[0], g)); link.setAttribute('y2', mix(Rt[1], Ch[1], g));
+        put(child, [0, Ch[0], Ch[1], g, mix(0.6, 1, g)]);
+        var busy = t >= 3.3 && t < E + 0.3;
+        spin.setAttribute('opacity', busy ? 1 : 0);
+        spin.setAttribute('transform', 'rotate(' + ((t * 260) % 360).toFixed(1) + ')');
+        fade(note, seg(t, 6.2, 6.6) * (1 - seg(t, 9.4, 9.8)));
+        // spawn item: ignored by the original, read by the patch
+        put(spawn, at(t, [[3.4, Rt[0], Rt[1], 0], [3.5, Rt[0], Rt[1], 1], [4.2, En[0], En[1], 1], [4.6, En[0], En[1], 0]]));
+        if (fix) {
+          put(tag, at(t, [[4.2, En[0], En[1], 0], [4.3, En[0], En[1], 1], [5.0, tagPos[0], tagPos[1], 1]]));
+          put(cStart, at(t, [[10.6, Ch[0], Ch[1], 0], [10.7, Ch[0], Ch[1], 1], [11.4, En[0], En[1], 1], [11.6, En[0], En[1], 0]]));
+          var gp = [tagPos[0] + 46, tagPos[1]];
+          put(ghost, at(t, [[11.5, gp[0], gp[1], 0], [11.8, gp[0], gp[1], 1], [12.6, gp[0], gp[1], 1], [13.0, gp[0], gp[1], 0]]));
+          ghostX.setAttribute('d', 'M' + (gp[0] - 22) + ' ' + (gp[1] + 14) + ' L' + (gp[0] + 22) + ' ' + (gp[1] - 14));
+          fade(ghostX, seg(t, 12.0, 12.2) * (1 - seg(t, 12.6, 13.0)));
+        }
+        // a.txt
+        var aKeys = [[E, Ch[0], Ch[1], 0, 0.4], [E + 0.3, Ch[0], Ch[1], 1, 1], [E + 1.1, En[0], En[1], 1, 1]];
+        if (fix) aKeys.push([E + 1.4, En[0], En[1], 1, 1], [E + 2.2, aDest[0], aDest[1], 1, 1]);
+        else aKeys.push([E + 2.0, En[0], En[1], 1, 1], [E + 2.7, aDest[0], aDest[1], 1, 1]);
+        put(aTxt, at(t, aKeys));
+        var landed = t >= (fix ? E + 2.2 : E + 2.7);
+        aTxt.r.setAttribute('stroke', landed ? (fix ? C.muted : C.mis) : (fix ? C.A : C.ink));
+        aTxt.r.setAttribute('stroke-dasharray', landed && fix ? '4 3' : '');
+        aTxt.r.setAttribute('fill', landed && !fix ? '#fbe9e9' : '#fff');
+        aTxt.tx.setAttribute('fill', landed ? (fix ? C.muted : C.mis) : C.ink);
+        if (fix) { aLbl.setAttribute('x', aDest[0] + 96); aLbl.setAttribute('y', aDest[1] + 5); fade(aLbl, seg(t, E + 2.2, E + 2.6)); }
+        if (!fix) {
+          var q = seg(t, E + 1.1, E + 1.3) * (1 - seg(t, E + 2.0, E + 2.3));
+          fade(query, q); fade(queryTx, q);
+          fade(ring, q * (0.55 + 0.45 * Math.sin(t * 9)));
+        }
+        // b.txt and the reports
+        put(bTxt, at(t, [[B, Rt[0], Rt[1], 0, 0.4], [B + 0.3, Rt[0], Rt[1], 1, 1], [B + 1.1, bDest[0], bDest[1], 1, 1]]));
+        var ta = trayCtr(G.trayA), tb = trayCtr(G.trayB);
+        put(envA, at(t, [[6.8, ta[0], ta[1], 0, 0.7], [7.0, ta[0], ta[1], 1, 0.9], [7.8, G.landA[0], G.landA[1], 1, 1]]));
+        put(envB, at(t, [[R, tb[0], tb[1], 0, 0.7], [R + 0.2, tb[0], tb[1], 1, 0.9], [R + 1.0, G.landB[0], G.landB[1], 1, 1]]));
+        put(verdict, at(t, [[R + 1.2, G.verdict[0], G.verdict[1], 0, 0.8], [R + 1.6, G.verdict[0], G.verdict[1], 1, 1]]));
+      };
+      return { update: update, caps: caps, dur: R + 4 };
+    };
+
+    /* ---- chapter 2: Turnstile ---- */
+    var turnstile = function (G) {
+      var K = G.cards, GR = G.grid;
+      mk('text', { 'class': 'hw-h', x: K.title[0], y: K.title[1] }, svg, 'One scenario, many orders');
+      var names = [['prompt B', C.B], ['c edits a.txt', C.A], ['B edits b.txt', C.B], ['report B', C.B]];
+      var cards = names.map(function (n) {
+        var g = mk('g', { opacity: 0 });
+        g.r = mk('rect', { width: K.w, height: K.h, rx: 9, fill: '#fff', stroke: C.line, 'stroke-width': 1.5 }, g);
+        mk('rect', { x: 0, y: 0, width: 6, height: K.h, rx: 3, fill: n[1] }, g);
+        mk('text', { 'class': 'hw-t', x: 20, y: K.h / 2 + 5.5, 'font-size': 15, 'font-weight': 600, fill: C.ink }, g, n[0]);
+        return g;
+      });
+      var rn = G.runner, or = G.oracle;
+      var runner = mk('g', {});
+      var rnBox = mk('rect', { x: rn.x, y: rn.y, width: rn.w, height: rn.h, rx: 12, fill: C.soft, stroke: C.border, 'stroke-width': 1.5 }, runner);
+      mk('text', { 'class': 'hw-t', x: rn.x + 16, y: rn.y + 24, 'font-size': 15, 'font-weight': 700, fill: C.ink }, runner, 'Adapter');
+      mk('text', { 'class': 'hw-s', x: rn.x + 16, y: rn.y + 43, fill: C.muted, 'font-size': 12.5 }, runner, 'unmodified build');
+      mk('rect', { x: or.x, y: or.y, width: or.w, height: or.h, rx: 12, fill: '#fff', stroke: C.border, 'stroke-width': 1.5 });
+      mk('text', { 'class': 'hw-t', x: or.x + 16, y: or.y + 24, 'font-size': 15, 'font-weight': 700, fill: C.ink }, svg, 'Oracle');
+      mk('text', { 'class': 'hw-s', x: or.x + 16, y: or.y + 46, fill: C.muted, 'font-size': 12.5 }, svg, 'hidden ledger of origins');
+      var led = mk('text', { 'class': 'hw-s', x: or.x + 16, y: or.y + 70, fill: C.ink }, svg);
+      led.innerHTML = '<tspan class="hw-mono">a.txt</tspan> ← A’s work';
+      var led2 = mk('text', { 'class': 'hw-s', x: or.x + 16, y: or.y + 92, fill: C.ink }, svg);
+      led2.innerHTML = '<tspan class="hw-mono">b.txt</tspan> ← B’s work';
+      var vtx = mk('text', { 'class': 'hw-s', x: or.x + 16, y: or.y + or.h - 18, 'font-weight': 700, fill: C.ink }, svg, '');
+      var dot = mk('circle', { r: 5, fill: C.ink, opacity: 0 });
+      var rep = [
+        pill(svg, 'B: <tspan class="hw-mono">b.txt</tspan>, <tspan class="hw-mono" fill="' + C.mis + '" font-weight="700">a.txt</tspan>', { stroke: C.B, size: 13, html: true, pad: 20 }),
+        pill(svg, 'B: <tspan class="hw-mono">b.txt</tspan>', { stroke: C.B, size: 13, html: true, pad: 20 }),
+        pill(svg, 'B: <tspan class="hw-mono">b.txt</tspan>', { stroke: C.B, size: 13, html: true, pad: 20 })
+      ];
+      // the grid of schedules
+      var blocks = [{ n: 504, name: 'A cancelled by the client', red: [341, 87, 0] },
+                    { n: 308, name: 'A interrupted', red: [240, 87, 0] },
+                    { n: 144, name: 'A completed', red: [0, 0, 0] }];
+      var EMPTY = '#f1f0ec';
+      var counter = mk('text', { 'class': 'hw-h', x: GR.counter[0], y: GR.counter[1] }, svg, '');
+      var cells = [], cy = GR.y;
+      blocks.forEach(function (b) {
+        mk('text', { 'class': 'hw-s', x: GR.x, y: cy + 12, fill: C.muted }, svg, b.name + ' · ' + b.n + ' schedules');
+        for (var i = 0; i < b.n; i++) {
+          var x = GR.x + (i % GR.cols) * GR.pitch, y = cy + 20 + Math.floor(i / GR.cols) * GR.pitch;
+          var r = mk('rect', { x: x.toFixed(1), y: y.toFixed(1), width: GR.cell, height: GR.cell, rx: 2, fill: EMPTY });
+          cells.push({ r: r, x: x, y: y, b: b, i: i, fill: EMPTY });
+        }
+        cy += 20 + Math.ceil(b.n / GR.cols) * GR.pitch + 12;
+      });
+      var foot = mk('text', { 'class': 'hw-s', x: GR.foot[0], y: GR.foot[1], fill: C.muted, 'font-size': 12.5 }, svg);
+      if (GR.footLines === 2) foot.innerHTML = '<tspan x="' + GR.foot[0] + '">Each square is one schedule, sorted within its scenario.</tspan><tspan x="' + GR.foot[0] + '" dy="17">Counts from Table I.</tspan>';
+      else foot.textContent = 'Each square is one schedule, sorted within its scenario. Counts from Table I.';
+      var fly = mk('rect', { width: GR.cell + 4, height: GR.cell + 4, rx: 3, opacity: 0 });
+
+      var orders = [[0, 1, 2, 3], [1, 0, 2, 3], [0, 2, 3, 1]];
+      var runs = [{ s: 2.0, step: 0.4, verdict: 0 }, { s: 6.2, step: 0.35, verdict: 1 }, { s: 9.8, step: 0.25, verdict: 1 }];
+      var demoCells = [0, 503, 502];
+      var slotOf = function (ord, id) { return ord.indexOf(id); };
+      var FILL = [12.8, 15.6], SW1 = [16.4, 17.4], SW2 = [18.6, 19.6];
+      var builds = ['Original adapter', 'Start-time patch', 'Dispatch-time patch'];
+      var caps = [
+        [0, 'Turnstile starts from a scenario: the events of one story, plus rules for which orders a real provider could produce. Here A’s subagent c is still running when B arrives.'],
+        [1.9, 'It runs the unmodified adapter on one legal order at a time, against a scripted provider, and checks each report against a hidden ledger of who did what.'],
+        [3.9, 'In this order c’s edit lands between B’s prompt and B’s report, so B’s report lists a.txt, which the ledger says is A’s. A misattribution.'],
+        [5.6, 'Another order: c’s edit arrives before B’s prompt. B’s report is clean.'],
+        [9.2, 'Another: it arrives after B’s report. Also clean.'],
+        [FILL[0], 'Then every other legal order, in a fresh adapter process each time. On the original adapter, 581 of the 956 schedules in these three Codex scenarios put an edit made for A in B’s report.'],
+        [SW1[0], 'The start-time patch still misattributes in 174: c’s first event can itself arrive after B’s prompt.'],
+        [SW2[0], 'The dispatch-time patch misattributes in none of them.']
+      ];
+
+      var update = function (t) {
+        // cards: positions follow the current order, sliding when it changes
+        var oi = t < 5.6 ? 0 : t < 9.2 ? 1 : 2;
+        var pr = oi === 0 ? 0 : oi === 1 ? 0 : 1;
+        var p = oi === 0 ? 1 : seg(t, oi === 1 ? 5.6 : 9.2, oi === 1 ? 6.1 : 9.7);
+        cards.forEach(function (g, id) {
+          var y0 = K.ys[slotOf(orders[pr], id)], y1 = K.ys[slotOf(orders[oi], id)];
+          var yy = mix(y0, y1, p), xx = K.x + (oi > 0 && y0 !== y1 ? Math.sin(Math.PI * p) * 26 : 0);
+          move(g, xx, yy, seg(t, 0.2 + id * 0.15, 0.6 + id * 0.15));
+        });
+        // the run currently playing
+        var active = -1;
+        runs.forEach(function (r, k) { if (t >= r.s && t < r.s + 4 * r.step + 1.9) active = k; });
+        var hl = -1, dp = 0;
+        if (active >= 0) {
+          var r = runs[active], rel = (t - r.s) / r.step;
+          if (rel < 4) { hl = orders[active][Math.floor(rel)]; dp = rel - Math.floor(rel); }
+        }
+        cards.forEach(function (g, id) {
+          g.r.setAttribute('stroke', id === hl ? C.ink : C.line);
+          g.r.setAttribute('stroke-width', id === hl ? 2.6 : 1.5);
+        });
+        if (hl >= 0) {
+          var sy = K.ys[slotOf(orders[active], hl)] + K.h / 2;
+          dot.setAttribute('cx', mix(K.x + K.w, rn.x + rn.w / 2, ease(dp)).toFixed(1));
+          dot.setAttribute('cy', mix(sy, rn.y, ease(dp)).toFixed(1));
+          fade(dot, 1);
+        } else fade(dot, 0);
+        rnBox.setAttribute('stroke', hl >= 0 ? C.ink : C.border);
+        // reports and verdicts
+        var vtext = '', vcol = C.ink;
+        runs.forEach(function (r, k) {
+          var t0 = r.s + 4 * r.step;
+          var a = [rn.x + rn.w / 2, rn.y + rn.h / 2], b = [or.x + or.w / 2, or.y + or.h / 2], q = G.repTo;
+          put(rep[k], at(t, [[t0, a[0], a[1], 0, 0.8], [t0 + 0.15, a[0], a[1], 1, 1], [t0 + 0.7, q[0], q[1], 1, 1], [t0 + 1.4, q[0], q[1], 1, 1], [t0 + 1.7, q[0], q[1], 0, 1]]));
+          if (t >= t0 + 0.7 && t < t0 + 1.9) {
+            vtext = r.verdict === 0 ? '✗ misattribution' : '✓ clean';
+            vcol = r.verdict === 0 ? C.mis : C.ink;
+          }
+          var c = cells[demoCells[k]];
+          var fl = at(t, [[t0 + 1.1, b[0], b[1], 0], [t0 + 1.2, b[0], b[1], 1], [t0 + 1.8, c.x + GR.cell / 2, c.y + GR.cell / 2, 1]]);
+          if (t >= t0 + 1.1 && t < t0 + 1.8) {
+            fly.setAttribute('x', (fl[1] - (GR.cell + 4) / 2).toFixed(1)); fly.setAttribute('y', (fl[2] - (GR.cell + 4) / 2).toFixed(1));
+            fly.setAttribute('fill', r.verdict === 0 ? C.mis : C.ok);
+            fly.setAttribute('opacity', 1);
+          } else if (t >= t0 + 1.8 && t < t0 + 1.9) fly.setAttribute('opacity', 0);
+        });
+        if (t < 2.0 || t >= FILL[0]) fly.setAttribute('opacity', 0);
+        setText(vtx, vtext); vtx.setAttribute('fill', vcol);
+        // grid: three demo cells, then the fill, then the two patches
+        var shown = t < FILL[0] ? 0 : Math.round(956 * clamp((t - FILL[0]) / (FILL[1] - FILL[0])));
+        var s1 = Math.round(956 * clamp((t - SW1[0]) / (SW1[1] - SW1[0])));
+        var s2 = Math.round(956 * clamp((t - SW2[0]) / (SW2[1] - SW2[0])));
+        var redCount = 0;
+        cells.forEach(function (c, idx) {
+          var dk = demoCells.indexOf(idx);
+          var vis = idx < shown || (dk >= 0 && t >= runs[dk].s + 4 * runs[dk].step + 1.8);
+          var bi = idx < s2 ? 2 : idx < s1 ? 1 : 0;
+          var red = c.i < c.b.red[bi];
+          var f = !vis ? EMPTY : red ? C.mis : C.ok;
+          if (vis && red) redCount++;
+          if (f !== c.fill) { c.r.setAttribute('fill', f); c.fill = f; }
+        });
+        var cb = t >= SW2[0] ? 2 : t >= SW1[0] ? 1 : 0;
+        if (cb > 0) redCount = blocks.reduce(function (n, b) { return n + b.red[cb]; }, 0);
+        setText(counter, t < FILL[0] ? 'Schedules checked: ' + (t >= runs[2].s + 4 * runs[2].step + 1.8 ? 3 : t >= runs[1].s + 4 * runs[1].step + 1.8 ? 2 : t >= runs[0].s + 4 * runs[0].step + 1.8 ? 1 : 0)
+          : builds[cb] + ': ' + redCount + ' of ' + (shown || 956) + ' misattribute');
+      };
+      return { update: update, caps: caps, dur: 22.5 };
+    };
+
+    /* ---- chapter 4: Theorem 1 and origin links ---- */
+    var theorem = function (G) {
+      var T = G.thm;
+      var steps = [['A spawns c'], ['A mails c'], ['cancel A'], ['prompt B'], ['B mails c'], ['B stops c'], ['u edits x'], ['B’s report']];
+      var pos = function (row, i) {
+        return T.wide ? [T.x0 + i * T.dx, T.rows[row]] : [T.cols[row], T.y0 + i * T.dy];
+      };
+      var head = function (row, lines, color) {
+        var g = mk('g', { opacity: 0 });
+        var x = T.wide ? T.labelX : T.cols[row], y = T.wide ? T.rows[row] - (lines.length - 1) * 9 + 5 : 84 - (lines.length - 1) * 17;
+        lines.forEach(function (l, j) {
+          mk('text', { 'class': j === 0 ? 'hw-h' : 'hw-s', x: x, y: y + j * 19, 'text-anchor': T.wide ? 'start' : 'middle', fill: color || C.ink, 'font-size': j === 0 ? 16 : 13 }, g, l);
+        });
+        return g;
+      };
+      var hE = head('E', ['Run E']), hS = head('S', T.wide ? ['Seen by', 'the adapter'] : ['Seen by', 'the adapter']), hF = head('F', ['Run E′']);
+      var sub = mk('text', { 'class': 'hw-s', 'text-anchor': T.wide ? 'start' : 'middle', x: T.wide ? T.labelX : T.cols.S, y: T.wide ? T.rows.S + 34 : 114, fill: C.muted, opacity: 0, 'font-size': 12.5 }, svg, 'same in both runs');
+      var chips = steps.map(function (s, i) {
+        var g = pill(svg, '', { w: T.sw, h: T.h, r: 10, stroke: C.line, fill: '#fff' });
+        g.tx.remove();
+        mk('text', { 'class': 'hw-s', 'text-anchor': 'middle', y: -8, fill: C.muted, 'font-size': 11.5 }, g, 'step ' + (i + 1));
+        var tx = mk('text', { 'class': 'hw-t', 'text-anchor': 'middle', y: 13, 'font-size': 14, 'font-weight': 600, fill: C.ink }, g);
+        tx.innerHTML = s[0].replace(/\b([cux])\b/g, '<tspan class="hw-mi" font-size="16">$1</tspan>');
+        return g;
+      });
+      var hidden = function (row, i, text, col) {
+        var g = pill(svg, text, { w: T.cw, h: 40, r: 10, stroke: col || C.ink2, dash: '4 4', color: col || C.ink2, size: 13.5, fill: '#fff' });
+        g.row = row; g.i = i; return g;
+      };
+      var H = [hidden('E', 1, 'task'), hidden('F', 1, 'message'), hidden('E', 4, 'message'), hidden('F', 4, 'task'),
+               hidden('E', 6, 'parent: A', C.A), hidden('F', 6, 'parent: B', C.B)];
+      var own = [pill(svg, 'x is A’s', { w: T.cw, h: 40, r: 10, fill: C.A, color: '#fff', size: 14 }),
+                 pill(svg, 'x is B’s', { w: T.cw, h: 40, r: 10, fill: C.B, color: '#fff', size: 14 })];
+      var ring = mk('rect', { width: T.sw + 14, height: T.h + 14, rx: 14, fill: 'none', stroke: C.ink, 'stroke-width': 2.2, opacity: 0 });
+      var verdict = function (row, l1, l2, col) {
+        var g = mk('g', { opacity: 0 });
+        var x = T.wide ? T.labelX : T.cols[row], y = T.wide ? T.rows[row] + 30 : 682;
+        mk('text', { 'class': 'hw-s', x: x, y: y, 'text-anchor': T.wide ? 'start' : 'middle', fill: C.ink2 }, g, l1);
+        mk('text', { 'class': 'hw-s', x: x, y: y + 18, 'text-anchor': T.wide ? 'start' : 'middle', 'font-weight': 700, fill: col }, g, l2);
+        return g;
+      };
+      var vE = verdict('E', 'listing x:', '✗ wrong', C.mis), vF = verdict('F', 'leaving x out:', 'incomplete', C.ink);
+      var tags = [pill(svg, 'root A', { fill: C.A, color: '#fff', size: 12.5, h: 26 }), pill(svg, 'root B', { fill: C.B, color: '#fff', size: 12.5, h: 26 })];
+      var newLbl = mk('text', { 'class': 'hw-s', 'font-weight': 700, 'text-anchor': 'middle', fill: C.ink, opacity: 0 }, svg, 'rootTurnId (0.162.0)');
+      var ok = verdict('S', '', '✓ E and E′ now differ', C.ink);
+      var ts = function (i) { return 1.6 + i * 0.85; };
+      var caps = [
+        [0, 'Can any adapter always get this right on the Codex 0.160.1 wire? Theorem 1 says no, using two runs, E and E′.'],
+        [1.6, 'Step by step, the adapter receives exactly the same messages in both runs.'],
+        [2.7, 'What differs is hidden. A mail can be a task, which can start a new turn, or a plain message, and the wire does not say which.'],
+        [7.0, 'A new turn u takes both mails and edits x. Its parent is A’s turn in E and B’s turn in E′, and the wire hides that too.'],
+        [8.9, 'So x is A’s work in E and B’s own work in E′.'],
+        [10.4, 'The adapter must publish one report for B. Listing x is wrong in E. Leaving x out is incomplete in E′, so the adapter must not claim the report is complete.'],
+        [13.2, 'So no adapter meeting the paper’s conditions is exact on this wire. The best it can do is stay safe.'],
+        [15.0, 'Codex 0.162.0 adds rootTurnId, an origin link on each turn, and it tells E from E′. Proposition 1: with origin links that are truthful and timely, attribution can be exact. Neither codex-acp version reads it yet.']
+      ];
+      var update = function (t) {
+        fade(hE, seg(t, 0.2, 0.9)); fade(hS, seg(t, 0.4, 1.1)); fade(hF, seg(t, 0.6, 1.3));
+        fade(sub, seg(t, 1.6, 2.2) * (1 - seg(t, 15.0, 15.4)));
+        chips.forEach(function (g, i) {
+          var p = pos('S', i), a = seg(t, ts(i), ts(i) + 0.4);
+          move(g, p[0], p[1] + (1 - a) * 10, a, 1);
+        });
+        H.forEach(function (g) {
+          var p = pos(g.row, g.i), a = seg(t, ts(g.i) + 0.3, ts(g.i) + 0.7);
+          move(g, p[0], p[1], a, mix(0.85, 1, a));
+          var reveal = g.i === 6 && t >= 16.4;
+          g.r.setAttribute('stroke-dasharray', reveal ? '' : '4 4');
+          g.r.setAttribute('stroke-width', reveal ? 2.4 : 1.6);
+        });
+        own.forEach(function (g, k) {
+          var p = pos(k === 0 ? 'E' : 'F', 7), a = seg(t, 8.9 + k * 0.3, 9.4 + k * 0.3);
+          move(g, p[0], p[1], a, mix(0.8, 1, a));
+        });
+        var rp = pos('S', 7);
+        ring.setAttribute('x', rp[0] - (T.sw + 14) / 2); ring.setAttribute('y', rp[1] - (T.h + 14) / 2);
+        fade(ring, seg(t, 10.4, 10.8) * (1 - seg(t, 14.6, 15.0)));
+        var dim = 1 - 0.6 * seg(t, 15.0, 15.6);
+        fade(vE, seg(t, 10.9, 11.3) * dim); fade(vF, seg(t, 11.9, 12.3) * dim);
+        var src = pos('S', 6);
+        tags.forEach(function (g, k) {
+          var dst = pos(k === 0 ? 'E' : 'F', 6);
+          dst = [dst[0] + 34, dst[1] - 24];
+          put(g, at(t, [[15.3, src[0], src[1], 0], [15.6, src[0], src[1], 1], [16.4, dst[0], dst[1], 1]]));
+        });
+        newLbl.setAttribute('x', src[0]); newLbl.setAttribute('y', T.wide ? src[1] + 46 : 650);
+        fade(newLbl, seg(t, 15.0, 15.4));
+        fade(ok, seg(t, 16.8, 17.3));
+      };
+      return { update: update, caps: caps, dur: 21 };
+    };
+
+    var CHAPTERS = [
+      function (G) { return story(G, false); },
+      turnstile,
+      function (G) { return story(G, true); },
+      theorem
+    ];
+
+    /* ---- player ---- */
+    var tabs = document.querySelectorAll('#hw-tabs .hw-tab');
+    var btn = document.getElementById('hw-play'), scrub = document.getElementById('hw-scrub');
+    var cap = document.getElementById('hw-cap'), count = document.getElementById('hw-count');
+    var ch = 0, t = 0, playing = false, visible = true, raf = 0, last = 0, hold = 0, cur = null, G = null, capIdx = -1;
+    var pickGeo = function () { return svg.parentNode.clientWidth < 640 ? GEO.tall : GEO.wide; };
+    var build = function () {
       while (svg.lastChild && svg.lastChild.nodeName !== 'title') svg.removeChild(svg.lastChild);
-      var defs = el('defs', {});
-      [['ah', '#2b2b28'], ['ahbad', '#D03B3B']].forEach(function (d) {
-        var m = el('marker', { id: d[0], viewBox: '0 0 10 10', refX: '9', refY: '5', markerWidth: '7', markerHeight: '7', orient: 'auto-start-reverse' }, defs);
-        el('path', { d: 'M0 1 9 5 0 9z', fill: d[1] }, m);
-      });
-      if (k > 0) el('rect', { 'class': 'd-now', x: 4, y: y(k) - 17, width: L.W - 8, height: 34, rx: 6 });
-      [['C', 'Client'], ['A', 'Adapter'], ['R', 'Root thread'], ['K', 'Child c']].forEach(function (h) {
-        var t = el('text', { 'class': 'd-head', x: X[h[0]], y: 26 });
-        t.innerHTML = h[0] === 'K' ? 'Child <tspan class="mi" font-weight="400">c</tspan>' : h[1];
-        if (h[0] === 'K' && k < 2) {
-          el('line', { 'class': 'd-lane off', x1: X.K, y1: 38, x2: X.K, y2: 414 });
-        } else if (h[0] === 'K') {
-          el('line', { 'class': 'd-lane off', x1: X.K, y1: 38, x2: X.K, y2: y(2) });
-          el('line', { 'class': 'd-lane', x1: X.K, y1: y(2), x2: X.K, y2: 414 });
-        } else {
-          el('line', { 'class': 'd-lane', x1: X[h[0]], y1: 38, x2: X[h[0]], y2: 414 });
-        }
-      });
-      if (k >= 1) el('rect', { 'class': 'd-bar', x: X.A - BW, y: y(1), width: BW * 2, height: y(Math.min(k, 5)) - y(1) + 1 });
-      if (k >= 6) el('rect', { 'class': 'd-bar', x: X.A - BW, y: y(6), width: BW * 2, height: y(k) - y(6) + 1 });
-      if (k >= 1) el('text', { 'class': 'd-barlbl', x: X.A - BW - 5, y: y(1) + 18 }).textContent = 'A';
-      if (k >= 6) el('text', { 'class': 'd-barlbl', x: X.A - BW - 5, y: y(6) + 18 }).textContent = 'B';
-      for (var i = 1; i <= 10; i++) {
-        var s = STEPS[i - 1], e = ends(s);
-        var n = el('text', { 'class': 'd-num' + (i <= k ? ' on' : ''), x: L.num, y: y(i) + 4 });
-        n.textContent = i;
-        if (i > k) { el('line', { 'class': 'd-ghost', x1: e[0], y1: y(i), x2: e[1], y2: y(i) }); continue; }
-        var bad = isBad(i);
-        var ln = el('line', { 'class': 'd-msg' + (bad ? ' bad' : ''), x1: e[0], y1: y(i), x2: e[1], y2: y(i), 'marker-end': 'url(#' + (bad ? 'ahbad' : 'ah') + ')' });
-        var lb = el('text', { 'class': 'd-lbl', x: MID[s.m], y: y(i) - 7 });
-        lb.innerHTML = (i === 10 && mode === 'disp') ? s.ok : (s.bad && !bad ? s.l.replace(' bad', '') : s.l);
-        var bg = BADGES[mode][i], badge = null;
-        if (bg) {
-          var w = bg[0].length * L.cw + 18, bx = MID.CA - w / 2 + 6;
-          badge = el('g', { 'class': 'd-badge' + (bg[1] ? ' bad' : '') });
-          el('line', { x1: bx + w, y1: y(i), x2: X.A - BW - 1, y2: y(i) }, badge);
-          el('rect', { x: bx, y: y(i) - 10, width: w, height: 20, rx: 10 }, badge);
-          el('text', { x: bx + w / 2, y: y(i) + 4 }, badge).textContent = bg[0];
-        }
-        if (i === k && !reduce) animate(ln, lb, badge, e, y(i), bad);
-      }
+      G = pickGeo();
+      svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + G.H);
+      cur = CHAPTERS[ch](G);
+      capIdx = -1;
+      render();
     };
-
-    var animate = function (ln, lb, badge, e, yy, bad) {
-      var len = Math.abs(e[1] - e[0]);
-      ln.setAttribute('stroke-dasharray', len);
-      ln.setAttribute('stroke-dashoffset', len);
-      var head = ln.getAttribute('marker-end');
-      ln.removeAttribute('marker-end');
-      lb.style.opacity = 0;
-      if (badge) badge.style.opacity = 0;
-      var dot = el('circle', { 'class': 'd-dot' + (bad ? ' bad' : ''), cx: e[0], cy: yy, r: 4.5 });
-      var t0 = null, D = 650, token = ++anim, done = false;
-      var finish = function () {
-        if (done || token !== anim) return;
-        done = true;
-        ln.removeAttribute('stroke-dasharray');
-        ln.removeAttribute('stroke-dashoffset');
-        ln.setAttribute('marker-end', head);
-        lb.style.opacity = '';
-        if (dot.parentNode) dot.parentNode.removeChild(dot);
-        if (badge) badge.style.opacity = '';
-      };
-      var tick = function (ts) {
-        if (done || token !== anim) return;
-        if (t0 === null) t0 = ts;
-        var p = Math.min(1, (ts - t0) / D), q = 1 - Math.pow(1 - p, 3);
-        ln.setAttribute('stroke-dashoffset', len * (1 - q));
-        dot.setAttribute('cx', e[0] + (e[1] - e[0]) * q);
-        lb.style.opacity = Math.max(0, (p - 0.35) / 0.65);
-        if (badge) badge.style.opacity = Math.max(0, (p - 0.6) / 0.4);
-        if (p < 1) requestAnimationFrame(tick); else finish();
-      };
-      requestAnimationFrame(tick);
-      /* frames are paused in background tabs; never leave a step half drawn */
-      setTimeout(finish, D + 150);
+    var render = function () {
+      cur.update(t);
+      var k = 0;
+      for (var i = 0; i < cur.caps.length; i++) if (t >= cur.caps[i][0]) k = i;
+      if (k !== capIdx) { capIdx = k; cap.textContent = cur.caps[k][1]; }
+      scrub.value = Math.round(1000 * t / cur.dur);
     };
-
-    var row = function (dt, dd, bad) {
-      return '<dt>' + dt + '</dt><dd' + (bad ? ' class="bad"' : '') + '>' + dd + '</dd>';
+    var label = function () {
+      btn.innerHTML = playing
+        ? '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2h2v8H3zM7 2h2v8H7z" fill="currentColor"/></svg>Pause'
+        : '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>' + (t >= cur.dur && ch === CHAPTERS.length - 1 ? 'Replay' : 'Play');
     };
-    var panel = function () {
-      elNo.textContent = k === 0 ? 'Ready' : 'Step ' + k + ' of 10';
-      elText.textContent = text(TEXT[k]);
-      var cur = k === 0 ? 'none' : k < 5 ? 'A' : k === 5 ? 'none (A answered)' : k < 10 ? 'B' : 'none (B answered)';
-      var bind = k < 2 ? 'not spawned yet'
-        : mode === 'orig' ? 'nothing'
-        : mode === 'start' ? (k >= 7 ? 'B' : 'not yet')
-        : 'A';
-      var cred = k < 8 ? 'not yet' : mode === 'disp' ? 'A (already answered)' : 'B';
-      var rep = k < 10 ? 'not sent yet' : mode === 'disp' ? '{b.txt}' : '{b.txt, a.txt}';
-      elState.innerHTML = row('Current request', cur) +
-        row('Child c bound to', bind, mode === 'start' && k >= 7) +
-        row('Edit to a.txt goes to', cred, k >= 8 && mode !== 'disp') +
-        row('B’s report', rep, k >= 10 && mode !== 'disp');
-      if (k === 10) {
-        var v = VERDICT[mode];
-        elVerdict.className = 'verdict' + (v[2] ? ' bad' : '');
-        elVerdict.innerHTML = '<b>' + v[0] + '</b>' + v[1];
-        elVerdict.hidden = false;
-      } else {
-        elVerdict.hidden = true;
-      }
-      btnBack.disabled = k === 0;
-      btnNext.disabled = k === 10;
-      btnPlay.textContent = playing ? 'Pause' : k === 10 ? 'Replay' : 'Play';
+    var select = function (n, keepPlaying) {
+      ch = n; t = 0; hold = 0;
+      Array.prototype.forEach.call(tabs, function (b, i) { b.setAttribute('aria-selected', String(i === n)); });
+      count.textContent = (n + 1) + ' of ' + CHAPTERS.length;
+      build();
+      if (!keepPlaying) stop(); else label();
     };
-    var go = function (n) { anim++; k = Math.max(0, Math.min(10, n)); draw(); panel(); };
-    var stop = function () { playing = false; clearTimeout(timer); panel(); };
-    var loop = function () {
-      if (!playing) return;
-      if (k >= 10) { stop(); return; }
-      go(k + 1);
-      timer = setTimeout(loop, k === 10 ? 0 : 2300);
+    var frame = function (now) {
+      raf = 0;
+      if (!playing || !visible) return;
+      var dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (t < cur.dur) {
+        t = Math.min(cur.dur, t + dt);
+        render();
+      } else if (ch < CHAPTERS.length - 1) {
+        hold += dt;
+        if (hold > 1.2) select(ch + 1, true);
+      } else { stop(); return; }
+      raf = requestAnimationFrame(frame);
     };
-    var play = function () {
-      if (k >= 10) go(0);
-      playing = true;
-      clearTimeout(timer);
-      timer = setTimeout(loop, k === 0 ? 150 : 0);
-      panel();
+    var start = function () {
+      if (t >= cur.dur && ch === CHAPTERS.length - 1) select(0, true);
+      playing = true; label();
+      if (!raf && visible) { last = performance.now(); raf = requestAnimationFrame(frame); }
     };
-    btnPlay.addEventListener('click', function () { if (playing) stop(); else play(); });
-    btnNext.addEventListener('click', function () { stop(); go(k + 1); });
-    btnBack.addEventListener('click', function () { stop(); go(k - 1); });
-    btnReset.addEventListener('click', function () { stop(); go(0); });
-    var modeBtns = document.querySelectorAll('#demo-modes button');
-    Array.prototype.forEach.call(modeBtns, function (b) {
-      b.addEventListener('click', function () {
-        mode = b.getAttribute('data-mode');
-        Array.prototype.forEach.call(modeBtns, function (o) { o.setAttribute('aria-pressed', String(o === b)); });
-        stop();
-        go(0);
-        if (!reduce) play();
+    var stop = function () { playing = false; if (raf) cancelAnimationFrame(raf); raf = 0; label(); };
+    btn.addEventListener('click', function () { if (playing) stop(); else start(); });
+    scrub.addEventListener('input', function () { t = cur.dur * scrub.value / 1000; hold = 0; render(); label(); });
+    Array.prototype.forEach.call(tabs, function (b, i) {
+      b.addEventListener('click', function () { var was = playing; select(i, false); if (was || !reduce) start(); });
+      b.addEventListener('keydown', function (e) {
+        var n = e.key === 'ArrowRight' ? (i + 1) % tabs.length : e.key === 'ArrowLeft' ? (i + tabs.length - 1) % tabs.length : -1;
+        if (n >= 0) { e.preventDefault(); tabs[n].focus(); tabs[n].click(); }
       });
     });
-    setLayout();
-    go(0);
     var rz = 0;
     window.addEventListener('resize', function () {
       clearTimeout(rz);
-      rz = setTimeout(function () { if (setLayout()) { anim++; draw(); } }, 120);
+      rz = setTimeout(function () { if (pickGeo() !== G) build(); }, 150);
     });
-    if (!reduce && 'IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) {
-        if (es[0].isIntersecting) { io.disconnect(); if (k === 0 && !playing) play(); }
-      }, { threshold: 0.5 });
-      io.observe(svg);
+    select(0, false);
+    if ('IntersectionObserver' in window) {
+      var first = true;
+      new IntersectionObserver(function (es) {
+        visible = es[0].isIntersecting;
+        if (visible && first && !reduce) { first = false; start(); }
+        else if (visible && playing && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+      }, { threshold: 0.35 }).observe(svg);
     }
   })();
 })();
