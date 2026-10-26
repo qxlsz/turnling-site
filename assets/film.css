@@ -1,0 +1,52 @@
+/* turnling film player */
+.film { --p: 0; position: relative; background: #06080d; border-radius: 16px; overflow: hidden; color: #eef1f6; box-shadow: 0 24px 60px -24px rgba(6, 8, 13, .55), 0 0 0 1px rgba(255, 255, 255, .04) inset; outline: none; }
+.film-stage { position: relative; display: flex; justify-content: center; background: #06080d; }
+.film-canvas { display: block; width: 100%; aspect-ratio: 16 / 9; cursor: pointer; }
+.film.portrait .film-canvas { aspect-ratio: 560 / 960; }
+.film-big { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px 14px 16px; border: 0; border-radius: 999px; background: rgba(238, 241, 246, .96); color: #0b0e14; font: 650 17px/1 var(--sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif); cursor: pointer; box-shadow: 0 10px 40px rgba(0, 0, 0, .45); transition: opacity .3s, transform .3s; }
+.film-big:hover { transform: translate(-50%, -50%) scale(1.04); }
+.film-big:focus-visible { outline: 3px solid #6d9cff; outline-offset: 3px; }
+.film-big-ic { width: 34px; height: 34px; border-radius: 50%; background: #0b0e14; position: relative; flex: none; }
+.film-big-ic::after { content: ""; position: absolute; left: 13px; top: 10px; border-style: solid; border-width: 7px 0 7px 11px; border-color: transparent transparent transparent #eef1f6; }
+.film-big-d { color: #5b6273; font-weight: 600; font-variant-numeric: tabular-nums; }
+.film.started .film-big { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) scale(.92); }
+.film.ended .film-big { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
+.film-cap { margin: 0; min-height: 4.4em; padding: 14px 22px 4px; font: 500 17px/1.5 var(--sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif); color: #e3e7ee; text-wrap: pretty; }
+.film-bar { display: flex; align-items: center; gap: 14px; padding: 8px 18px 10px; }
+.film-btn { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .08); color: #eef1f6; cursor: pointer; display: grid; place-items: center; padding: 0; }
+.film-btn:hover { background: rgba(255, 255, 255, .14); }
+.film-btn:focus-visible, .film-chap:focus-visible { outline: 2px solid #6d9cff; outline-offset: 2px; }
+.ic-play { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 12px; border-color: transparent transparent transparent currentColor; margin-left: 3px; }
+.film.playing .ic-play { width: 12px; height: 14px; border: 0; border-left: 4px solid currentColor; border-right: 4px solid currentColor; margin-left: 0; }
+.ic-fs { width: 14px; height: 14px; background:
+  linear-gradient(currentColor, currentColor) 0 0 / 5px 2px no-repeat, linear-gradient(currentColor, currentColor) 0 0 / 2px 5px no-repeat,
+  linear-gradient(currentColor, currentColor) 100% 0 / 5px 2px no-repeat, linear-gradient(currentColor, currentColor) 100% 0 / 2px 5px no-repeat,
+  linear-gradient(currentColor, currentColor) 0 100% / 5px 2px no-repeat, linear-gradient(currentColor, currentColor) 0 100% / 2px 5px no-repeat,
+  linear-gradient(currentColor, currentColor) 100% 100% / 5px 2px no-repeat, linear-gradient(currentColor, currentColor) 100% 100% / 2px 5px no-repeat; }
+.film-track { position: relative; flex: 1; height: 40px; display: flex; align-items: center; }
+.film-segs { position: absolute; left: 0; right: 0; top: 50%; height: 5px; margin-top: -2.5px; display: flex; gap: 4px; }
+.film-seg { position: relative; height: 100%; border-radius: 3px; background: rgba(255, 255, 255, .16); overflow: hidden; }
+.film-seg i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #eef1f6; border-radius: 3px; }
+.film-knob { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(255, 255, 255, .15); pointer-events: none; }
+.film-range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.film-range:focus-visible + .film-knob, .film-track:focus-within .film-knob { box-shadow: 0 0 0 4px rgba(109, 156, 255, .6); }
+.film-time { flex: none; font: 600 14px/1 var(--sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif); color: #aeb6c6; font-variant-numeric: tabular-nums; min-width: 84px; text-align: right; }
+.film-chaps { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 16px 16px; }
+.film-chap { border: 0; border-radius: 999px; padding: 7px 13px 7px 9px; background: rgba(255, 255, 255, .06); color: #aeb6c6; font: 600 14px/1 var(--sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.film-chap .n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255, 255, 255, .1); font-size: 12px; color: #eef1f6; }
+.film-chap:hover { background: rgba(255, 255, 255, .11); color: #eef1f6; }
+.film-chap.on { background: #eef1f6; color: #0b0e14; }
+.film-chap.on .n { background: #0b0e14; color: #eef1f6; }
+.film:fullscreen { display: flex; flex-direction: column; border-radius: 0; width: 100vw; height: 100vh; }
+.film:fullscreen .film-stage { flex: 1; min-height: 0; align-items: center; }
+.film:fullscreen .film-canvas { aspect-ratio: auto; }
+.film:fullscreen .film-cap { text-align: center; font-size: 20px; min-height: 3.2em; }
+.film:fullscreen .film-chaps { display: none; }
+@media (max-width: 619px) {
+  .film-cap { font-size: 16px; padding: 12px 16px 2px; min-height: 6.2em; }
+  .film-bar { gap: 10px; padding: 6px 12px 8px; }
+  .film-time { min-width: 0; font-size: 13px; }
+  .film-chaps { padding: 0 12px 14px; }
+  .film-chap { font-size: 13px; padding: 6px 11px 6px 7px; }
+}
+@media (prefers-reduced-motion: reduce) { .film-big, .film-big:hover { transition: none; } }
