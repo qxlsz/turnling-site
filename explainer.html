@@ -3,50 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="light">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Explainer: Attributing Subagent Work in Coding-Agent Protocol Adapters</title>
-<meta name="description" content="A two and a half minute animated explainer: how a subagent's edit lands in the wrong request's report, how Turnstile finds every order in which it happens, two fixes, and why no adapter can always be exact on the Codex 0.160.1 wire.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='6' width='9' height='4' rx='1' fill='%23DCDBD4'/%3E%3Crect x='11' y='6' width='4' height='4' rx='1' fill='%23D03B3B'/%3E%3C/svg%3E">
+<meta name="description" content="A short animated explainer: how a subagent's edit lands in the wrong request's report, how Turnstile finds every order in which it happens, two fixes, and why no adapter can always be exact on the Codex 0.160.1 wire.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='6' width='9' height='4' rx='2' fill='%232F62F5'/%3E%3Crect x='11' y='6' width='4' height='4' rx='1' fill='%23E0464B'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/film.css">
 <style>
-:root { --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif; }
+:root { --ink: #17191e; --muted: #6b707a; --line: #e6e8eb; --blue: #2f62f5; --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif; }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-body { margin: 0; background: #06080d; color: #eef1f6; font: 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
-a { color: #9dbcff; }
-.top { max-width: 1280px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 24px 14px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
-.top h1 { margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
-.top h1 span { color: #aeb6c6; font-weight: 500; }
-.top nav { display: flex; gap: 18px; font-size: 0.95rem; }
-.top nav a { color: #aeb6c6; text-decoration: none; }
-.top nav a:hover { color: #eef1f6; }
-main { max-width: 1280px; margin: 0 auto; padding: 0 24px 40px; }
-.film { box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 30px 80px -30px rgba(0, 0, 0, .8); }
-.transcript { max-width: 760px; margin: 44px auto 0; }
-.transcript h2 { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #737c90; margin: 0 0 6px; }
-.transcript h3 { margin: 26px 0 6px; font-size: 1.1rem; }
-.transcript h3 button { font: inherit; color: #eef1f6; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
-.transcript h3 button span { color: #737c90; font-weight: 500; font-size: 0.9rem; margin-left: 6px; font-variant-numeric: tabular-nums; }
-.transcript h3 button:hover { color: #9dbcff; }
-.transcript p { margin: 0; color: #c9cfdb; }
-.fine { max-width: 760px; margin: 36px auto 0; font-size: 0.9rem; color: #737c90; }
-.authors { margin: 4px 0 0; color: #aeb6c6; font-size: 0.95rem; }
+body { margin: 0; background: #fff; color: var(--ink); font: 17px/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: underline; text-decoration-color: #c5c8cd; text-underline-offset: .2em; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+.top { max-width: 1200px; margin: 0 auto; padding: max(22px, env(safe-area-inset-top)) 24px 20px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; }
+.top h1 { margin: 0; font-size: 17px; font-weight: 650; }
+.top nav { display: flex; gap: 20px; font-size: 15px; color: var(--muted); }
+.top nav a { text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+main { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+.transcript { max-width: 680px; margin: 64px auto 0; }
+.transcript h2 { margin: 0 0 4px; font-size: 22px; font-weight: 650; }
+.transcript h3 { margin: 28px 0 4px; font-size: 17px; }
+.transcript h3 button { font: inherit; font-weight: 650; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.transcript h3 button span { margin-left: 6px; color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.transcript h3 button:hover { color: var(--blue); }
+.transcript p { margin: 0; color: #3b3f47; }
+.fine { max-width: 680px; margin: 40px auto 0; font-size: 14px; color: var(--muted); }
 @media (max-width: 640px) {
   .top { padding-left: 16px; padding-right: 16px; }
-  main { padding: 0 0 32px; }
-  .film { border-radius: 0; }
-  .transcript, .fine { padding: 0 16px; }
+  main { padding: 0 12px 48px; }
+  .transcript, .fine { padding: 0 4px; }
 }
 </style>
 </head>
 <body>
 <header class="top">
-  <div>
-    <h1>Attributing Subagent Work <span>in Coding-Agent Protocol Adapters</span></h1>
-    <p class="authors">Rajasekhar Josyula &middot; Lakshmi Sravya Vedantham</p>
-  </div>
+  <h1>turnling</h1>
   <nav><a href="./">Project page</a><a href="paper.pdf">Paper (PDF)</a></nav>
 </header>
 <main>
@@ -54,23 +49,21 @@ main { max-width: 1280px; margin: 0 auto; padding: 0 24px 40px; }
   <section class="transcript" aria-labelledby="tr-h">
     <h2 id="tr-h">Transcript</h2>
     <div data-film-transcript>
-      <h3><button type="button" data-t="0.00">1. The setup <span>0:00</span></button></h3>
-      <p>When a subagent outlives the request that started it, which request gets credit for its work? An editor sends each request to an ACP adapter. The adapter drives Codex and tells the editor which files each request changed. Request A’s turn starts a subagent, c, on a thread of its own. Whatever c does, it does for A. The adapter keeps one report per request: the files that request changed.</p>
-      <h3><button type="button" data-t="13.85">2. The bug <span>0:14</span></button></h3>
-      <p>The user cancels A. That ends A’s own turn, but not c, which keeps working. The user sends request B. The adapter now treats B as the current request. c’s start message only now reaches the adapter. Messages from different threads can arrive in any order. c edits a.txt. That edit was made for A. The adapter asks only which request is current. The answer is B, so a.txt goes into B’s report. B edits b.txt, which really is B’s work. B’s report reaches the editor. It lists a.txt, which was made for A. The request id is right and the files are wrong, and the editor cannot tell. The paper calls this arrival-time attribution. We found it in both the Codex and the Claude ACP adapters.</p>
-      <h3><button type="button" data-t="36.20">3. Many orders <span>0:36</span></button></h3>
-      <p>Each thread delivers its own messages in order. Nothing orders one thread’s messages against another’s. Here is the order from before: a.txt arrives after B starts, so it lands in B’s report. The same work in another order: a.txt arrives before B starts, and B’s report is right. Here c starts early, but its edit still arrives during B. Wrong again. Here the edit arrives after B ends. Right. Which report a.txt lands in depends only on the order. So Turnstile tries every order its model of the provider allows.</p>
-      <h3><button type="button" data-t="54.80">4. Turnstile <span>0:55</span></button></h3>
-      <p>Turnstile runs the real, unmodified adapter against a scripted Codex and feeds it one message at a time. Wherever more than one thread could deliver next, it branches. Each path through this tree is one schedule. Each schedule runs in a fresh adapter process. An oracle checks every report against a hidden ledger of who each edit was made for. No language model is involved. Every failing schedule is re-run three times and counts only if it fails the same way each time. Three Codex scenario groups, with A cancelled, interrupted or completed, give 956 schedules. Each square is one of them, coloured from the final runs. On the original adapter, 581 of the 956 put an edit made for A in B’s report.</p>
-      <h3><button type="button" data-t="76.00">5. Two fixes <span>1:16</span></button></h3>
-      <p>Sort them by when c’s edit reaches the adapter: not during B at all, or during B with c started before or after B. The original adapter credits the edit when it arrives, so every edit that arrives during B fails, whenever c started. Start-time binding ties c to the request that is current when c’s start message arrives. If c started before B, that is A, and the edit stays out of B’s report. 407 schedules are fixed. But c’s start message can itself arrive after B starts. Then c is tied to B, and 174 schedules still fail. Dispatch-time binding reads the spawn item instead. Codex sends it under A’s turn, and it names c’s thread. The order no longer matters. In every scenario we ran, no schedule misattributes. The price: work it cannot tie to a dispatch is left out, and the report says it may be incomplete. In sibling and grandchild scenarios that drops B’s own child edit in 226 of 996 schedules. On the Claude adapter, 39 of 111 schedules misattribute, and start-time binding removes all 39.</p>
-      <h3><button type="button" data-t="109.80">6. The limit <span>1:50</span></button></h3>
-      <p>Could a smarter adapter always get this right? Under the paper’s conditions, on the typed Codex 0.160.1 wire, no. Two runs, E and E′. A spawns c, and A and B each send c some mail. In E, A’s mail is a task and B’s is a plain message. In E′ it is the other way round. c’s turn is stopped, and a new turn u picks up both mails. Its parent is whoever sent the task: A in E, B in E′. So x is A’s work in E and B’s work in E′. None of that reaches the adapter. Both kinds of mail produce the same item, and u’s parent is not on the typed wire. The adapter gets exactly the same messages in both runs, so it must write the same report for B. If B’s report lists x, it is wrong in E. If it leaves x out, it misses B’s own edit in E′. Either way, one run is wrong. That is Theorem 1. The best an adapter can do there is to be safe: leave uncertain work out, and say the report may be incomplete. Origin carried on the event stream is enough. Codex 0.162.0 adds a rootTurnId to each turn, and it tells E from E′. Neither the pinned nor the current codex-acp reads it yet.</p>
-      <h3><button type="button" data-t="143.20">7. Takeaways <span>2:23</span></button></h3>
-      <p>Arrival time is the wrong proxy for the request that caused delegated work. Per-request bookkeeping cannot follow work that outlives its request. Bind such work to the request that dispatched it, or better, put the origin on every delegated event. Attributing Subagent Work in Coding-Agent Protocol Adapters, by Rajasekhar Josyula and Lakshmi Sravya Vedantham.</p>
+      <h3><button type="button" data-t="0.00">Setup <span>0:00</span></button></h3>
+      <p>Editors talk to coding agents through adapters. An editor, an adapter and an agent sit in a row, and request A travels from the editor to the agent. The adapter tells the editor which files each request changed: the agent’s edit of a.txt comes back and lands in A’s report. That works, until work outlives its request.</p>
+      <h3><button type="button" data-t="10.20">The bug <span>0:10</span></button></h3>
+      <p>Request A starts a subagent. A timeline shows requests on the top lane and the subagent below. You cancel A. The subagent keeps running. Then you send request B. The subagent edits a.txt. The adapter credits the edit to the request current now: B. B’s report lists b.txt, B’s own edit, and a.txt. But a.txt was made for A. Its line leads back through the subagent to request A, and a.txt is struck out of B’s report. Arrival is not origin.</p>
+      <h3><button type="button" data-t="35.00">Turnstile <span>0:35</span></button></h3>
+      <p>Turnstile runs the unmodified adapter under every legal order of these events. The subagent’s start and edit slide to new places; whenever the edit lands while B is current, it ends up in B’s report. 956 orders in three scenarios. Each dot is one. In 581 of them, the original adapter puts A’s edit in B’s report.</p>
+      <h3><button type="button" data-t="49.50">Two fixes <span>0:50</span></button></h3>
+      <p>Fix 1: credit the subagent to the request current when it starts. 174 remain. That fails when the subagent starts after B. Fix 2: credit it to the request that dispatched it. None remain. If the origin is unclear, it leaves the edit out and says so.</p>
+      <h3><button type="button" data-t="63.60">The limit <span>1:04</span></button></h3>
+      <p>Could a smarter adapter always get this right? Here are two runs that send it exactly the same messages. In run 1, the edit x is A’s work. In run 2, it is B’s. What differs is hidden from the adapter: which message started x’s turn. The adapter must give one answer for both. Listing x in B’s report is wrong in run 1; leaving it out is incomplete in run 2. Either way, one run gets a wrong or incomplete report. Theorem 1: on the typed Codex 0.160.1 wire, no adapter that meets the paper’s conditions is exact. Put the origin on each event, and the two runs differ. Codex 0.162.0 adds this origin, as rootTurnId.</p>
+      <h3><button type="button" data-t="89.10">Takeaway <span>1:29</span></button></h3>
+      <p>Bind delegated work to the request that dispatched it. Better: carry the origin on every delegated event. Attributing Subagent Work in Coding-Agent Protocol Adapters, by Rajasekhar Josyula and Lakshmi Sravya Vedantham.</p>
     </div>
   </section>
-  <p class="fine">Drawn by hand from the paper; nothing here runs an adapter. In chapters 4 and 5 each square is one of the 956 schedules behind Table I&rsquo;s first three Codex rows, coloured from the final Turnstile runs of the original, start-time and dispatch-time builds. Keys: space or K plays and pauses, the arrow keys skip five seconds, 1 to 7 jump to a chapter, F toggles full screen.</p>
+  <p class="fine">Drawn from the paper; nothing here runs an adapter. Each dot in the Turnstile scene is one of the 956 schedules behind Table I&rsquo;s first three Codex rows, grouped by outcome in the final Turnstile runs. Keys: space or K plays and pauses, the arrow keys skip five seconds, 1 to 6 jump to a chapter, F toggles full screen.</p>
 </main>
 <script src="assets/film.js"></script>
 </body>
