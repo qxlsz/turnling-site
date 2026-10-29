@@ -3,12 +3,13 @@
 .film-stage { position: relative; display: flex; justify-content: center; }
 .film-canvas { display: block; width: 100%; aspect-ratio: 16 / 9; cursor: pointer; }
 .film.portrait .film-canvas { aspect-ratio: 560 / 860; }
-.film-big { position: absolute; left: 50%; top: 64%; width: 64px; height: 64px; margin: -32px 0 0 -32px; padding: 0; border: 0; border-radius: 50%; background: #17191e; cursor: pointer; transition: opacity .3s, transform .3s; }
+.film-big { position: absolute; left: 50%; top: 64%; width: 64px; height: 64px; margin: -32px 0 0 -32px; padding: 0; border: 0; border-radius: 50%; background: #17191e; cursor: pointer; transition: opacity .3s, transform .3s, top 0s .3s; }
 .film-big::after { content: ""; position: absolute; left: 25px; top: 21px; border-style: solid; border-width: 11px 0 11px 17px; border-color: transparent transparent transparent #fff; }
 .film-big:hover { transform: scale(1.06); }
 .film-big:focus-visible { outline: 3px solid #2f62f5; outline-offset: 3px; }
 .film.portrait .film-big { top: 60%; }
-.film.started .film-big { opacity: 0; pointer-events: none; transform: scale(.9); }
+.film.started .film-big { opacity: 0; pointer-events: none; transform: scale(.9); top: 78%; }
+.film.portrait.started .film-big { top: 76%; }
 .film.ended .film-big { opacity: 1; pointer-events: auto; transform: none; }
 .film-bar { display: flex; align-items: center; gap: 10px; padding: 0 12px 8px; }
 .film-btn { flex: none; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: none; color: #17191e; cursor: pointer; display: grid; place-items: center; opacity: .62; }

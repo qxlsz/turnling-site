@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Explainer: Attributing Subagent Work in Coding-Agent Protocol Adapters</title>
-<meta name="description" content="A short animated explainer: how a subagent's edit lands in the wrong request's report, how Turnstile finds every order in which it happens, two fixes, and why no adapter can always be exact on the Codex 0.160.1 wire.">
+<meta name="description" content="A short animated explainer: how a subagent's edit lands in the wrong request's report, how Turnstile finds the orders in which it happens, two fixes, and why no adapter can always be exact on the Codex 0.160.1 wire.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='6' width='9' height='4' rx='2' fill='%232F62F5'/%3E%3Crect x='11' y='6' width='4' height='4' rx='1' fill='%23E0464B'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/film.css">
 <style>
@@ -51,15 +51,15 @@ main { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
     <div data-film-transcript>
       <h3><button type="button" data-t="0.00">Setup <span>0:00</span></button></h3>
       <p>Editors talk to coding agents through adapters. An editor, an adapter and an agent sit in a row, and request A travels from the editor to the agent. The adapter tells the editor which files each request changed: the agent’s edit of a.txt comes back and lands in A’s report. That works, until work outlives its request.</p>
-      <h3><button type="button" data-t="10.20">The bug <span>0:10</span></button></h3>
+      <h3><button type="button" data-t="10.40">The bug <span>0:10</span></button></h3>
       <p>Request A starts a subagent. A timeline shows requests on the top lane and the subagent below. You cancel A. The subagent keeps running. Then you send request B. The subagent edits a.txt. The adapter credits the edit to the request current now: B. B’s report lists b.txt, B’s own edit, and a.txt. But a.txt was made for A. Its line leads back through the subagent to request A, and a.txt is struck out of B’s report. Arrival is not origin.</p>
-      <h3><button type="button" data-t="35.00">Turnstile <span>0:35</span></button></h3>
-      <p>Turnstile runs the unmodified adapter under every legal order of these events. The subagent’s start and edit slide to new places; whenever the edit lands while B is current, it ends up in B’s report. 956 orders in three scenarios. Each dot is one. In 581 of them, the original adapter puts A’s edit in B’s report.</p>
-      <h3><button type="button" data-t="49.50">Two fixes <span>0:50</span></button></h3>
+      <h3><button type="button" data-t="35.70">Turnstile <span>0:36</span></button></h3>
+      <p>Turnstile runs the unmodified adapter under every order of these events the provider model allows. The subagent’s start and edit slide to new places; whenever the edit lands while B is current, it ends up in B’s report. 956 orders in three scenarios. Each dot is one. In 581 of them, the original adapter puts A’s edit in B’s report.</p>
+      <h3><button type="button" data-t="50.80">Two fixes <span>0:51</span></button></h3>
       <p>Fix 1: credit the subagent to the request current when it starts. 174 remain. That fails when the subagent starts after B. Fix 2: credit it to the request that dispatched it. None remain. If the origin is unclear, it leaves the edit out and says so.</p>
-      <h3><button type="button" data-t="63.60">The limit <span>1:04</span></button></h3>
+      <h3><button type="button" data-t="65.00">The limit <span>1:05</span></button></h3>
       <p>Could a smarter adapter always get this right? Here are two runs that send it exactly the same messages. In run 1, the edit x is A’s work. In run 2, it is B’s. What differs is hidden from the adapter: which message started x’s turn. The adapter must give one answer for both. Listing x in B’s report is wrong in run 1; leaving it out is incomplete in run 2. Either way, one run gets a wrong or incomplete report. Theorem 1: on the typed Codex 0.160.1 wire, no adapter that meets the paper’s conditions is exact. Put the origin on each event, and the two runs differ. Codex 0.162.0 adds this origin, as rootTurnId.</p>
-      <h3><button type="button" data-t="89.10">Takeaway <span>1:29</span></button></h3>
+      <h3><button type="button" data-t="90.50">Takeaway <span>1:31</span></button></h3>
       <p>Bind delegated work to the request that dispatched it. Better: carry the origin on every delegated event. Attributing Subagent Work in Coding-Agent Protocol Adapters, by Rajasekhar Josyula and Lakshmi Sravya Vedantham.</p>
     </div>
   </section>
