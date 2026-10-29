@@ -433,12 +433,12 @@
       KE.push([TS[k] - mv, ORD[k - 1][1]], [TS[k], ORD[k][1]]);
     }
     var heads = [[0.3, 7.9, 'Turnstile runs the adapter under every order of these events the provider model allows.'],
-                 [8.2, 11.2, '956 orders in three scenarios. Each dot is one.'],
+                 [8.2, 11.2, '956 orders in three scenario groups. Each dot is one.'],
                  [11.5, 14.8, 'In 581 of them, A’s edit lands in B’s report.'],
                  [15.1, 19.0, 'Fix 1: credit the subagent to the request current when it starts.'],
                  [19.3, 21.6, 'That fails when the subagent starts after B.'],
                  [21.9, 25.0, 'Fix 2: credit it to the request that dispatched it.'],
-                 [25.3, D - 0.5, 'None remain. If the origin is unclear, it leaves the edit out and says so.']];
+                 [25.3, D - 0.5, 'None remain in these orders. Uncertain origins are left out and flagged.']];
     // the three builds: label, cells still wrong, when the row appears, when its sweep ends
     var builds = [['Original adapter', NM, 11.6, 13.0], ['Fix 1: start-time binding', NL, 15.2, 16.7], ['Fix 2: dispatch-time binding', 0, 22.0, 24.5]];
     function G() {
@@ -527,7 +527,7 @@
       txt('A’s edit in B’s report', g.gx + 24, ly, { sz: lsz, w: 500, c: C.ink2, a: lg });
       var lx2 = g.gx + 24 + tw('A’s edit in B’s report', lsz, 500) + 30;
       sq(lx2 + 7, ly, PORT ? 10 : 14, C.grey, lg);
-      txt('correct', lx2 + 24, ly, { sz: lsz, w: 500, c: C.ink2, a: lg });
+      txt('not misattributed', lx2 + 24, ly, { sz: lsz, w: 500, c: C.ink2, a: lg });
       // the count: the total counts up in ink as the dots land, then hands itself to the small line
       // while the red count takes its place
       var up = Math.round(N * clamp((t - 8.3) / 1.5)), na0 = P(t, 8.6, 9.0, E.out);
@@ -563,11 +563,11 @@
       chapters: [[0, 'Turnstile'], [15.1, 'Two fixes']],
       caps: [
         [0.3, 'Turnstile runs the unmodified adapter under every order of these events the provider model allows. The subagent’s start and edit slide to new places; whenever the edit lands while B is current, it ends up in B’s report.'],
-        [8.2, '956 orders in three scenarios. Each dot is one.'],
+        [8.2, '956 orders in three scenario groups. Each dot is one.'],
         [11.5, 'In 581 of them, the original adapter puts A’s edit in B’s report.'],
         [15.1, 'Fix 1: credit the subagent to the request current when it starts. 174 remain.'],
         [19.3, 'That fails when the subagent starts after B.'],
-        [21.9, 'Fix 2: credit it to the request that dispatched it. None remain.'],
+        [21.9, 'Fix 2: credit it to the request that dispatched it. None remain in these 956 orders.'],
         [25.3, 'If the origin is unclear, it leaves the edit out and says so.']
       ]
     };
@@ -583,7 +583,7 @@
                  [6.7, 11.5, 'In run 1, the edit x is A’s work. In run 2, it is B’s.'],
                  [11.8, 16.5, 'The adapter must give one answer for both.'],
                  [16.8, 20.3, 'Either way, one run gets a wrong or incomplete report.'],
-                 [20.6, D - 0.5, 'Put the origin on each event, and the two runs differ.']];
+                 [20.6, D - 0.5, 'Expose the turn’s origin, and the two runs differ.']];
     function G() {
       if (PORT) return { ys: [330, 470], xs: function (i) { return 76 + i * 50; }, xx: 404, eq: 490, opts: [210, 410], oy: 586, note: 586, foot: 806 };
       return { ys: [410, 590], xs: function (i) { return 350 + i * 118; }, xx: 1090, eq: 1200, opts: [1330, 1482], oy: 322, note: 714, foot: 800 };
@@ -649,7 +649,7 @@
       var fa = vis(t, 17.1, 20.8, 0.4);
       block('Theorem 1: on the typed Codex 0.160.1 wire, no adapter that meets the paper’s conditions is exact.', FW / 2, g.foot, { sz: PORT ? 18 : 24, w: 500, c: C.ink2, a: fa, maxW: PORT ? 480 : 1300 });
       var ra2 = P(t, 22.3, 22.8);
-      block('Codex 0.162.0 adds this origin, as rootTurnId.', FW / 2, g.foot, { sz: PORT ? 18 : 24, w: 500, c: C.ink2, a: ra2, maxW: PORT ? 480 : 1300 });
+      block('Codex 0.162.0 exposes turn lineage as rootTurnId.', FW / 2, g.foot, { sz: PORT ? 18 : 24, w: 500, c: C.ink2, a: ra2, maxW: PORT ? 480 : 1300 });
     }
     return {
       dur: D, draw: draw, heads: heads,
@@ -660,7 +660,7 @@
         [6.7, 'In run 1, the edit x is A’s work. In run 2, it is B’s. What differs is hidden from the adapter: which message started x’s turn.'],
         [11.8, 'The adapter must give one answer for both. Listing x in B’s report is wrong in run 1; leaving it out is incomplete in run 2.'],
         [16.8, 'Either way, one run gets a wrong or incomplete report. Theorem 1: on the typed Codex 0.160.1 wire, no adapter that meets the paper’s conditions is exact.'],
-        [20.6, 'Put the origin on each event, and the two runs differ. Codex 0.162.0 adds this origin, as rootTurnId.']
+        [20.6, 'Expose the turn’s origin, and the two runs differ. Codex 0.162.0 exposes turn lineage as rootTurnId.']
       ]
     };
   })();

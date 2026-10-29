@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>turnling: Attributing Subagent Work in Coding-Agent Protocol Adapters</title>
-<meta name="description" content="When a subagent outlives the request that started it, a coding-agent protocol adapter can credit its edits to a later request. We state an origin-attribution invariant, check two ACP adapters with Turnstile, prove a limit and a sufficient condition, and evaluate two fixes.">
+<meta name="description" content="Coding-agent protocol adapters can credit a subagent's edits to a later request. We study two ACP adapters with Turnstile, compare experimental repairs, and establish a conditional limit on attribution from typed provider messages.">
 <meta property="og:title" content="turnling: Attributing Subagent Work in Coding-Agent Protocol Adapters">
 <meta property="og:description" content="An edit made for request A appears in B’s report in 581 of 956 Codex schedules and 39 of 111 Claude schedules on the original ACP adapters.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='6' width='9' height='4' rx='2' fill='%232F62F5'/%3E%3Crect x='11' y='6' width='4' height='4' rx='1' fill='%23E0464B'/%3E%3C/svg%3E">
@@ -94,7 +94,7 @@ footer p { margin: 0; padding-top: 24px; border-top: 1px solid var(--line); }
 
   <section>
     <h2>What we found</h2>
-    <p>We state the property such reports should keep, an origin-attribution invariant, and check it with Turnstile, which runs an unmodified adapter under the event orders a provider model allows.</p>
+    <p>We state the property such reports should keep, an origin-attribution invariant, and check it with Turnstile, which runs real adapter builds under event orders allowed by explicit models in hand-written scenarios.</p>
     <dl class="stats">
       <div><dt class="bad">581 <small>of 956</small></dt><dd>Codex schedules in which the original adapter puts an edit made for A in B’s report</dd></div>
       <div><dt class="bad">39 <small>of 111</small></dt><dd>Claude schedules with the same failure</dd></div>
@@ -104,13 +104,14 @@ footer p { margin: 0; padding-top: 24px; border-top: 1px solid var(--line); }
   </section>
 
   <section>
-    <h2>The fix</h2>
-    <p>Bind each subagent to the request that dispatched it, read from the spawn item, rather than to the request that is current when its events arrive. On Codex the dispatch-time patch removes every misattribution in our scenarios. When the link is uncertain, the adapter leaves the edit out and flags the report. Binding at the subagent’s start instead still fails in 174 of the 956 schedules.</p>
+    <h2>Experimental repairs</h2>
+    <p>Bind each child turn to the request that dispatched it, using a spawn or follow-up item. On Codex the dispatch-time patch removes every misattribution in Table I, but omits B’s own child edit in 226 of 996 sibling or grandchild schedules. When the link is uncertain, the adapter leaves the edit out and flags the report. Binding at the subagent’s start instead still fails in 174 of the 956 schedules.</p>
   </section>
 
   <section>
     <h2>The limit</h2>
-    <p>On the typed Codex 0.160.1 wire, no adapter meeting the paper’s conditions attributes exactly in all legal executions: two executions can give the adapter identical input, yet an edit belongs to A in one and to B in the other. Origin links on the event stream suffice. Codex 0.162.0 adds a <code>rootTurnId</code> field that, by our source reading, provides them.</p>
+    <p>On the typed Codex 0.160.1 wire, no adapter meeting the paper’s conditions attributes exactly in all legal executions: two executions can give the adapter identical input, yet an edit belongs to A in one and to B in the other. Truthful lineage available before reporting suffices for an ideal collector. Codex 0.162.0 adds <code>rootTurnId</code> to turn lifecycle messages; by our source reading, it supplies that lineage under the paper’s conditions.</p>
+    <p>On an extended provider stub, our lineage patch has no misattribution in 2,423 schedules, but omits own evidence in 34 registration-race cases. A separate edit–revert control also exposes an omission. These results do not establish that the patch is exact in every execution.</p>
   </section>
 
   <section>
