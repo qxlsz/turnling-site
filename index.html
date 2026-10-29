@@ -98,19 +98,19 @@ footer p { margin: 0; padding-top: 24px; border-top: 1px solid var(--line); }
     <dl class="stats">
       <div><dt class="bad">581 <small>of 956</small></dt><dd>Codex schedules in which the original adapter puts an edit made for A in B’s report</dd></div>
       <div><dt class="bad">39 <small>of 111</small></dt><dd>Claude schedules with the same failure</dd></div>
-      <div><dt>0</dt><dd>Codex schedules that misattribute with dispatch-time binding, in every scenario of Table I</dd></div>
+      <div><dt>0</dt><dd>Codex schedules, in any scenario of Table I, where the dispatch-time patch puts an edit in the wrong report</dd></div>
     </dl>
-    <p>Single live runs with the real Codex and Claude Code CLIs show that these orders occur. They say nothing about how often.</p>
+    <p>Live runs with the real Codex and Claude Code CLIs show that these orders occur. They do not say how often.</p>
   </section>
 
   <section>
     <h2>The fix</h2>
-    <p>Bind each subagent to the request that dispatched it, read from the spawn item, not to the request that is current when its events arrive. On Codex this removes every misattribution in our scenarios. The cost: when the link is uncertain, the adapter leaves the edit out and flags the report. Binding at the subagent’s start instead still fails in 174 of the 956 schedules.</p>
+    <p>Bind each subagent to the request that dispatched it, read from the spawn item, rather than to the request that is current when its events arrive. On Codex the dispatch-time patch removes every misattribution in our scenarios. When the link is uncertain, the adapter leaves the edit out and flags the report. Binding at the subagent’s start instead still fails in 174 of the 956 schedules.</p>
   </section>
 
   <section>
     <h2>The limit</h2>
-    <p>On the typed Codex 0.160.1 wire, no adapter meeting stated conditions attributes exactly in all legal executions: two executions can give the adapter identical input, yet an edit belongs to A in one and to B in the other. Origin links on the event stream suffice. Codex 0.162.0 adds a <code>rootTurnId</code> field that, by our source reading, provides them.</p>
+    <p>On the typed Codex 0.160.1 wire, no adapter meeting the paper’s conditions attributes exactly in all legal executions: two executions can give the adapter identical input, yet an edit belongs to A in one and to B in the other. Origin links on the event stream suffice. Codex 0.162.0 adds a <code>rootTurnId</code> field that, by our source reading, provides them.</p>
   </section>
 
   <section>

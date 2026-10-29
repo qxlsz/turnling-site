@@ -438,7 +438,7 @@
                  [15.1, 19.0, 'Fix 1: credit the subagent to the request current when it starts.'],
                  [19.3, 21.6, 'That fails when the subagent starts after B.'],
                  [21.9, 25.0, 'Fix 2: credit it to the request that dispatched it.'],
-                 [25.3, D - 0.5, 'None left. If the origin is unclear, it leaves the edit out and says so.']];
+                 [25.3, D - 0.5, 'None remain. If the origin is unclear, it leaves the edit out and says so.']];
     // the three builds: label, cells still wrong, when the row appears, when its sweep ends
     var builds = [['Original adapter', NM, 11.6, 13.0], ['Fix 1: start-time binding', NL, 15.2, 16.7], ['Fix 2: dispatch-time binding', 0, 22.0, 24.5]];
     function G() {
